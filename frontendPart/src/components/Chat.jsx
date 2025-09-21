@@ -30,9 +30,10 @@ const Chat = () => {
   
   // whenever user login it display data of logged in user like username and password
   useEffect(()=>{
-       
-       setData(JSON.parse(localStorage.getItem("userinfo")));
-       setAccessToken(JSON.parse(localStorage.getItem("accessToken")));
+       const userData=JSON.parse(localStorage.getItem("userinfo"));
+       setData(userData);
+       const token=JSON.parse(localStorage.getItem("accessToken"))
+       setAccessToken(token);
 
        axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
         {
