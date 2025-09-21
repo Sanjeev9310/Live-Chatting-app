@@ -50,7 +50,7 @@ const Chat = () => {
       }).catch((err)=>{
         console.log("Error:error while fetching chats",err.message);
       });
-  },[]);
+  },[chatStatus]);
 
   useEffect(()=>{
      function handleClickOutside(e){
@@ -99,7 +99,7 @@ const Chat = () => {
       }).catch((err)=>{
         console.log("Error:",err.message)
       })
-  },[chat?._id]);
+  },[chat]);
   
 
   const handleAllUser=async(e)=>{
@@ -179,7 +179,7 @@ const handleClick=async(user) =>{
        }
       )
       // if(Object.keys(chat).length===0){
-      const updatedChat=await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
+      await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
       {chatId:value?._id},
       {
        headers:{
@@ -188,18 +188,20 @@ const handleClick=async(user) =>{
         withCredentials:true 
       }
      )
-    setChat(value);
-    const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
-      {chatId:value?._id},
-      {
-        headers:{
-                "Content-Type":"application/json"
-            },
-        withCredentials:true 
-      }
-    )
+    
+    // const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
+    //   {chatId:value?._id},
+    //   {
+    //     headers:{
+    //             "Content-Type":"application/json"
+    //         },
+    //     withCredentials:true 
+    //   }
+    // )
      
-     setChatData(allChat);
+    //  setChatData(allChat.data);
+    
+     setChat(value);
      setChatStatus(true);
      setAllMessages(response.data);
  }
