@@ -69,7 +69,8 @@ const userLogin=asyncHandler(async(req,res)=>{
    // console.log(user);
    const options={
       httpOnly:true,
-      secure:false,
+      secure:true,
+      sameSite:"none"
    }
    console.log(user);   
    return res.status(201).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options).json(new ApiResponse(201,user,"User login successfully"));
@@ -94,7 +95,8 @@ const userLogout=asyncHandler(async (req,res)=>{
    // console.log(user);
    const options={
       httpOnly:true,
-      secure:true
+      secure:true,
+      sameSite:"none"
    }
    return res.status(200).clearCookie("accessToken", options).clearCookie("refreshToken",options).json(new ApiResponse(200, {}, "User logged Out"))
 
