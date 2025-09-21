@@ -64,8 +64,8 @@ const userLogin=asyncHandler(async(req,res)=>{
    const refreshToken=await existedUser.generateRefreshToken();
    existedUser.refreshToken=refreshToken;
    await existedUser.save({validateBeforeSave:false});
-   existedUser.accessToken=accessToken;
-   await existedUser.save({validateBeforeSave:false});
+   // existedUser.accessToken=accessToken;
+   // await existedUser.save({validateBeforeSave:false});
    
    const user=await User.find(existedUser._id).select("-password");
    // console.log(user);

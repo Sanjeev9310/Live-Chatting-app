@@ -36,7 +36,7 @@ const Login = () => {
        console.log(response.data.data);
          if(response.data.statusCode===200 || response.data.statusCode===201){
          localStorage.setItem("userinfo",JSON.stringify(response.data.data));
-         localStorage.setItem("accessToken",JSON.stringify(response.data.accessToken));
+        //  localStorage.setItem("accessToken",JSON.stringify(response.data.accessToken));
          localStorage.setItem("refreshToken",JSON.stringify(response.data.refreshToken));
          navigate("/chat");
          }
