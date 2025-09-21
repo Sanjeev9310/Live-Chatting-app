@@ -185,8 +185,9 @@ const handleClick=async(user) =>{
      )
     console.log(existedChat.data);
     setChat(existedChat.data);
+    setChatStatus(true);
+    setAllMessages(response.data);
     const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
-      {chatId:existedChat.data._id},
       {
         headers:{
                 "Content-Type":"application/json"
@@ -195,8 +196,7 @@ const handleClick=async(user) =>{
       }
     )
      setChatData(allChat.data);
-     setChatStatus(true);
-     setAllMessages(response.data);
+     
  }
 
 const handleMessageSend=async(chatId,content)=>{
