@@ -9,7 +9,7 @@ import { backendUrl } from '../constantApi.js'
 
 const Chat = () => {
   const navigate=useNavigate();
-  const [refreshToken,setAccessToken]=useState("");
+  const [refreshToken,setAccessToken]=useState();
   const [modalStatus,setModalStatus]=useState(false);
   const [data,setData]=useState([]);
   const [chatData,setChatData]=useState([]);
