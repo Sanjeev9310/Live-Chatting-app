@@ -158,8 +158,8 @@ const handleClick=async(user) =>{
           withCredentials:true
           }
         )
-        console.log(singleChat);
-        setChat(singleChat.data[0]);
+        console.log(singleChat.data);
+        
         const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
       {
         headers:{
@@ -170,6 +170,7 @@ const handleClick=async(user) =>{
       }
     )
         setChatData(allChat.data);
+        setChat(singleChat.data[0]);
         setChatStatus(true);
         setStatus(false);
         setInput("");
