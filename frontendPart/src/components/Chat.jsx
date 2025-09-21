@@ -198,18 +198,7 @@ const handleClick=async(user) =>{
       setChatTitleStatus(false);
       setChatStatus(false);
       setAllMessages([]);
-      const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
-        {chatId:value?._id},
-       {
-        headers:{
-                "Content-Type":"application/json",
-                Authorization:`Bearer ${refreshToken}`
-            },
-        withCredentials:true 
-       }
-      )
-      // if(Object.keys(chat).length===0){
-      const existedChat=await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
+       const existedChat=await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
       {chatId:value?._id},
       {
        headers:{
@@ -221,6 +210,19 @@ const handleClick=async(user) =>{
      )
     console.log(existedChat.data);
     setChat(existedChat.data);
+    
+    const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
+        {chatId:value?._id},
+       {
+        headers:{
+                "Content-Type":"application/json",
+                Authorization:`Bearer ${refreshToken}`
+            },
+        withCredentials:true 
+       }
+      )
+      // if(Object.keys(chat).length===0){
+    
     setChatStatus(true);
     setChatTitleStatus(true);
     setAllMessages(response.data);
