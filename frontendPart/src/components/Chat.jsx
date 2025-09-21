@@ -4,6 +4,7 @@ import axios from "axios"
 import { Navigate, useNavigate } from 'react-router'
 import GroupCreationModal from './GroupCreationModal.jsx'
 import socket from "./socket.js";
+import { backendUrl } from '../../../backendPart/src/utils/constantApi.js'
 // import io from "socket.io-client";
 
 const Chat = () => {
@@ -48,7 +49,7 @@ const Chat = () => {
        const responseUserDetail=JSON.parse(localStorage.getItem("userinfo"));
        setData(responseUserDetail);
 
-       axios.get("http://localhost:5000/api/v/chat/fetch-chatData",
+       axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
         {
          headers:{
             "Content-Type":"application/json"
@@ -81,7 +82,7 @@ const Chat = () => {
   },[chat?._id])
 
  useEffect(()=>{
-      axios.post("http://localhost:5000/api/v/message/fetch-all-message",
+      axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
         {chatId:chat?._id},
        {
         headers:{
@@ -106,7 +107,7 @@ const Chat = () => {
       setStatus(false);
     }
     else{
-    const response=await axios.get("http://localhost:5000/api/v/chat/fetch-allUser",
+    const response=await axios.get(`${backendUrl}/api/v/chat/fetch-allUser`,
     {   
     params:{input},
     headers:{
@@ -123,7 +124,7 @@ const Chat = () => {
 }
  const handleLogout=async()=>{
      localStorage.clear();
-     await axios.post("http://localhost:5000/api/v/user/logout",
+     await axios.post(`${backendUrl}/api/v/user/logout`,
       {},
         {
            headers:{
@@ -143,7 +144,7 @@ const handleClick=async(user) =>{
       setChatStatus(false);
       try{
 
-        const singleChat=await axios.post("http://localhost:5000/api/v/chat/access-chat",
+        const singleChat=await axios.post(`${backendUrl}/api/v/chat/access-chat`,
           {
             userId:user._id,
           },
@@ -170,7 +171,7 @@ const handleClickForExistedChat=async (value) =>{
       setChat({});
       setChatStatus(false);
       setAllMessages([]);
-      const response=await axios.post("http://localhost:5000/api/v/message/fetch-all-message",
+      const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
         {chatId:value?._id},
        {
         headers:{
@@ -180,7 +181,7 @@ const handleClickForExistedChat=async (value) =>{
        }
       )
       if(Object.keys(chat).length===0){
-      await axios.put("http://localhost:5000/api/v/chat/seen-message-status",
+      await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
       {chatId:value?._id},
       {
        headers:{
@@ -191,15 +192,6 @@ const handleClickForExistedChat=async (value) =>{
      )
      setChatStatus(true);
     }
-    //  const chatListResponse=axios.get("http://localhost:5000/api/v/chat/fetch-chatData",
-    //     {
-    //      headers:{
-    //         "Content-Type":"application/json"
-    //       },
-    //     withCredentials:true
-    //     }
-    //   )
-    //   setChatData(chatListResponse.data);
       setChat(value);
       setAllMessages(response.data);
       

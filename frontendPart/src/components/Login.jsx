@@ -4,6 +4,7 @@ import axios from "axios"
 import {useNavigate} from "react-router-dom";
 import "./login.css"
 import { useRef } from 'react';
+import { backendUrl } from '../../../backendPart/src/utils/constantApi.js';
 
 const Login = () => {
   const navigate=useNavigate();
@@ -24,7 +25,7 @@ const Login = () => {
     
     // try {
      try {
-       const response=await axios.post("http://localhost:5000/api/v/user/login",
+       const response=await axios.post(`${backendUrl}/api/v/user/login`,
         loginData,
         {    header:{
                  "Content-Type":"application/json"
@@ -50,11 +51,6 @@ const Login = () => {
          }
      }
     }
-      
-    //  catch (error) {
-    //       console.log("Unable to fetch user data",error.message)
-    //  }
-  
 
   return(
     <>

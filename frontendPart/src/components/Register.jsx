@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import axios from "axios";
 import "./register.css"
+import { backendUrl } from "../../../backendPart/src/utils/constantApi.js";
 
 const Register = () => {
   const register=useRef("");
@@ -31,7 +32,7 @@ const Register = () => {
        formData.append("password", form.password);
        formData.append("pic", form.pic);
        const response = await axios.post(
-         "http://localhost:5000/api/v/user/register",
+         `${backendUrl}/api/v/user/register`,
          formData,
          {
            header: {

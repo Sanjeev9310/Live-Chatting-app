@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import "./GroupCreation.css"
 import { useRef } from 'react';
+import { backendUrl } from '../../../backendPart/src/utils/constantApi.js';
 
 const GroupCreationModal = ({modalStatus}) => {
   const val=useRef(null);
@@ -22,7 +23,7 @@ const GroupCreationModal = ({modalStatus}) => {
       setGroupUserStatus(false);
     }
     else{
-    const response=await axios.get("http://localhost:5000/api/v/chat/fetch-allUser",
+    const response=await axios.get(`${backendUrl}/api/v/chat/fetch-allUser`,
    {   
     params:{input},
     headers:{
@@ -37,7 +38,7 @@ const GroupCreationModal = ({modalStatus}) => {
   }
 }
 const handleGroup=async()=>{
-    const response=await axios.post("http://localhost:5000/api/v/chat/create-groupChat",
+    const response=await axios.post(`${backendUrl}/api/v/chat/create-groupChat`,
         {
             chatName:groupData.chatName,
             usersId:groupData.usersId
@@ -107,14 +108,3 @@ const removeUserFromGroup=(e)=>{
 }
 
 export default GroupCreationModal
-
-
-//   const user=await axios.get("http://localhost:5000/api/v/chat/fetch-singleUser",
-    //     {username},
-    //     {
-    //      headers:{
-    //             "Content-Type":"application/json"
-    //         },
-    //    withCredentials:true   
-    //    }
-    // )

@@ -3,21 +3,8 @@ import Login from './components/Login.jsx'
 import { BrowserRouter,Routes,Route } from 'react-router-dom'
 import Register from './components/Register.jsx'
 import Chat from './components/Chat.jsx'
-// import Chat  from './components/Chat.jsx'
-
 
 function App() {
-  // const router=createBrowserRouter(
-  //   [{
-  //     path:"/",
-  //     element:<Register/>
-  //   },
-  //   {
-  //     path:"/login",
-  //     element:<Login/>
-  //   },
-
-  // ])
   return(
     <>
 
