@@ -90,11 +90,11 @@ const Chat = () => {
       settypeMessage("");
       setChatTitleStatus(true);
       setAllMessages(res.data);
-      console.log(res.data);
+      // console.log(res.data);
       }).catch((err)=>{
         console.log("Error:",err.message)
       })
-  },[chat]);
+  },[chat?._id]);
   
 
   const handleAllUser=async(e)=>{
@@ -151,7 +151,7 @@ const handleClick=async(user) =>{
           }
         )
         console.log(singleChat);
-        setChat(singleChat?.data[0]);
+        setChat(singleChat.data[0]);
         setChatStatus(true);
         setStatus(false);
         setInput("");
@@ -183,7 +183,7 @@ const handleClick=async(user) =>{
         withCredentials:true 
       }
      )
-    console.log(existedChat.data);
+    console.log("updated chat has fetch",existedChat.data);
     const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
       {chatId:value?._id},
       {
