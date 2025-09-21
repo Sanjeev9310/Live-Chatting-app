@@ -164,7 +164,7 @@ const handleClick=async(user) =>{
         console.log(singleChat);
       
       const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
-        {chatId:singleChat?.data?._id},
+        {chatId:singleChat.data._id},
        {
         headers:{
                 "Content-Type":"application/json",
@@ -184,7 +184,7 @@ const handleClick=async(user) =>{
       }
     )
         setChatData(allChat.data);
-        setAllMessages(response.data);
+        setAllMessages(response.data || []);
         setChatTitleStatus(true);
         setChatStatus(true);
     } 
