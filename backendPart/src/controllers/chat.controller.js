@@ -115,7 +115,7 @@ const seenMessageStatus=asyncHandler(async (req,res) => {
         {
             new:true
         }
-    )
+    ).populate("users","username profilePic")
    console.log(chat);
    return res.send(chat);
     

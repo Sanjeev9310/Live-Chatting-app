@@ -195,7 +195,7 @@ const handleClick=async(user) =>{
     )
      
      setChatData(allChat.data);
-     setChat(existedChat.data);
+     setChat(existedChat.data[0]);
      setChatStatus(true);
      setAllMessages(response.data);
  }
