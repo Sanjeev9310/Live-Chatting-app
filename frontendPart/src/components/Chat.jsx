@@ -142,12 +142,12 @@ const Chat = () => {
 
 const handleClick=async(user) =>{
       setInput("");
+      // setChat({});
+      setAllMessages([]);
       setStatus(false);
       setChatStatus(false);
       setChatTitleStatus(false);
-      setAllMessages([]);
       
-      setChat({});
       const singleChat=await axios.post(`${backendUrl}/api/v/chat/access-chat`,
           {
             userId:user._id,
@@ -161,7 +161,6 @@ const handleClick=async(user) =>{
           }
         )
         setChat(singleChat.data[0]);
-        
         console.log(singleChat.data[0]);
       
       const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
@@ -174,6 +173,7 @@ const handleClick=async(user) =>{
         withCredentials:true 
        }
       )
+      console.log(response.data);
    const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
       {
         headers:{
@@ -194,7 +194,7 @@ const handleClick=async(user) =>{
       // }
 
   const handleClickForExistedChat=async (value) =>{
-      setChat({});
+      // setChat({});
       setChatTitleStatus(false);
       setChatStatus(false);
       setAllMessages([]);
