@@ -9,6 +9,7 @@ import { backendUrl } from '../constantApi.js'
 
 const Chat = () => {
   const navigate=useNavigate();
+  const [accessToken,setAccessToken]=useState("");
   const [modalStatus,setModalStatus]=useState(false);
   const [data,setData]=useState([]);
   const [chatData,setChatData]=useState([]);
@@ -29,13 +30,15 @@ const Chat = () => {
   
   // whenever user login it display data of logged in user like username and password
   useEffect(()=>{
-       const responseUserDetail=JSON.parse(localStorage.getItem("userinfo"));
-       setData(responseUserDetail);
+       
+       setData(JSON.parse(localStorage.getItem("userinfo")));
+       setAccessToken(JSON.parse(localStorage.getItem("accessToken")));
 
        axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
         {
          headers:{
-            "Content-Type":"application/json"
+            "Content-Type":"application/json",
+            Authorization:`Bearer ${accessToken}`
           },
         withCredentials:true
         }
@@ -82,7 +85,8 @@ const Chat = () => {
         {chatId:chat?._id},
        {
         headers:{
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                Authorization:`Bearer ${accessToken}`
             },
         withCredentials:true 
        }
@@ -107,7 +111,8 @@ const Chat = () => {
     {   
     params:{input},
     headers:{
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                Authorization:`Bearer ${accessToken}`
             },
     withCredentials:true   
     }
@@ -123,7 +128,8 @@ const Chat = () => {
       {},
         {
            headers:{
-              "Content-Type":"application/json"
+              "Content-Type":"application/json",
+              Authorization:`Bearer ${accessToken}`
             },
           withCredentials:true
         }
@@ -145,7 +151,8 @@ const handleClick=async(user) =>{
           },
           {
            headers:{
-              "Content-Type":"application/json"
+              "Content-Type":"application/json",
+              Authorization:`Bearer ${accessToken}`
             },
           withCredentials:true
           }
@@ -168,7 +175,8 @@ const handleClick=async(user) =>{
         {chatId:value?._id},
        {
         headers:{
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                Authorization:`Bearer ${accessToken}`
             },
         withCredentials:true 
        }
@@ -178,7 +186,8 @@ const handleClick=async(user) =>{
       {chatId:value?._id},
       {
        headers:{
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                Authorization:`Bearer ${accessToken}`
             },
         withCredentials:true 
       }
@@ -190,9 +199,10 @@ const handleClick=async(user) =>{
     const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
       {
         headers:{
-                "Content-Type":"application/json"
+              Authorization:`Bearer ${accessToken}`
             },
-        withCredentials:true 
+        withCredentials:true,
+       
       }
     )
      setChatData(allChat.data);

@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 import { User } from "../models/user.model.js";
 
 const isUserLogin=asyncHandler(async (req,res,next) => {
-const accessToken=req.cookies?.accessToken ||  req.headers?.authorization?.split(" ")[1];
+const accessToken=req.cookies?.accessToken ||  req.headers?.Authorization?.split(" ")[1];
 //  console.log(accessToken);
     const decodedData=jwt.verify(accessToken,process.env.ACCESS_TOKEN_SECRET)
     if(!decodedData){
