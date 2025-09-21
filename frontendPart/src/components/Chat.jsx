@@ -32,7 +32,7 @@ const Chat = () => {
   useEffect(()=>{
        const userData=JSON.parse(localStorage.getItem("userinfo"));
        setData(userData);
-       const token=JSON.parse(localStorage.getItem("refreshToken"))
+       const token=localStorage.getItem("refreshToken");
        setAccessToken(token);
 
        axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
