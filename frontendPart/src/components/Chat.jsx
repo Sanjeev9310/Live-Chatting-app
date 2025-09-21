@@ -81,25 +81,25 @@ const Chat = () => {
      return ()=> socket.off("receive-message");
   },[chat?._id])
 
- useEffect(()=>{
-      axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
-        {chatId:chat?._id},
-       {
-        headers:{
-                "Content-Type":"application/json",
-                Authorization:`Bearer ${refreshToken}`
-            },
-        withCredentials:true 
-       }
-      ).then((res)=>{
-      settypeMessage("");
-      setChatTitleStatus(true);
-      setAllMessages(res.data);
-      // console.log(res.data);
-      }).catch((err)=>{
-        console.log("Error:",err.message)
-      })
-  },[chat?._id]);
+//  useEffect(()=>{
+//       axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
+//         {chatId:chat?._id},
+//        {
+//         headers:{
+//                 "Content-Type":"application/json",
+//                 Authorization:`Bearer ${refreshToken}`
+//             },
+//         withCredentials:true 
+//        }
+//       ).then((res)=>{
+//       settypeMessage("");
+//       setChatTitleStatus(true);
+//       setAllMessages(res.data);
+//       // console.log(res.data);
+//       }).catch((err)=>{
+//         console.log("Error:",err.message)
+//       })
+//   },[chat?._id]);
   
 
   const handleAllUser=async(e)=>{
@@ -141,14 +141,9 @@ const Chat = () => {
   }
 
 const handleClick=async(user) =>{
-      setChatStatus(false);
-      setChatTitleStatus(false);
-      setAllMessages([]);
+      setStatus(false);
       setChat({});
-      
-      // try{
-
-        const singleChat=await axios.post(`${backendUrl}/api/v/chat/access-chat`,
+      const singleChat=await axios.post(`${backendUrl}/api/v/chat/access-chat`,
           {
             userId:user._id,
           },
@@ -161,9 +156,22 @@ const handleClick=async(user) =>{
           }
         )
         setChat(singleChat.data[0]);
+        setChatStatus(false);
+        setChatTitleStatus(false);
+        setAllMessages([]);
         console.log(singleChat.data[0]);
-        
-        const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
+      
+      const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
+        {chatId:value?._id},
+       {
+        headers:{
+                "Content-Type":"application/json",
+                Authorization:`Bearer ${refreshToken}`
+            },
+        withCredentials:true 
+       }
+      )
+   const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
       {
         headers:{
               Authorization:`Bearer ${refreshToken}`
@@ -173,9 +181,10 @@ const handleClick=async(user) =>{
       }
     )
         setChatData(allChat.data);
+        setAllMessages(response.data);
         setChatTitleStatus(true);
         setChatStatus(true);
-        setStatus(false);
+        
         setInput("");
     } 
       // catch (error) {
@@ -184,7 +193,7 @@ const handleClick=async(user) =>{
 
   const handleClickForExistedChat=async (value) =>{
       setChat({});
-      // setChatTitleStatus(false);
+      setChatTitleStatus(false);
       setChatStatus(false);
       setAllMessages([]);
       const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
@@ -211,6 +220,7 @@ const handleClick=async(user) =>{
     console.log(existedChat.data);
     setChat(existedChat.data);
     setChatStatus(true);
+    setChatTitleStatus(true);
     setAllMessages(response.data);
     const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
       {
