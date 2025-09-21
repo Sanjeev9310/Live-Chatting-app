@@ -76,7 +76,7 @@
     padding: 2px;
  }
  .chat-body{
-    width:30%;
+    width:300px;
     height:100vh;
     border:solid black 2px;
     border-radius:5px;
@@ -146,6 +146,15 @@
     border-radius:5px;
     background-color: rgb(207, 222, 227);
 
+}
+@media (max-width:700px) {
+   .chat-body{
+      display:none
+   }
+   .message-page{
+      width:100vw;
+      min-width:0,
+   }
 }
 .chat-page-window{
    display: flex;

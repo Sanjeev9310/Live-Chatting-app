@@ -19,7 +19,7 @@ const Chat = () => {
 
   const [chat,setChat]=useState({});
   const [chatStatus,setChatStatus]=useState(false);
-  // const [messageStatus,setMessageStatus]=useState(false);
+ 
   const [typeMessage,settypeMessage]=useState("");
   const [chatTitleStatus,setChatTitleStatus]=useState(false);
 
@@ -49,6 +49,24 @@ const Chat = () => {
       }).catch((err)=>{
         console.log("Error:error while fetching chats",err.message);
       });
+      setChat(chatData[0]);
+      axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
+       {chatId:chatData[0]?._id},
+       {
+        headers:{
+                "Content-Type":"application/json",
+                Authorization:`Bearer ${refreshToken}`
+            },
+        withCredentials:true 
+       }
+      ).then((res)=>{
+        setAllMessages(res.data);
+      }).catch((err)=>{
+        console.log("Error: while fetching messages",err.message);
+      })
+      setChatStatus(true);
+      setChatTitleStatus(true);
+
   },[]);
 
   useEffect(()=>{
@@ -65,7 +83,6 @@ const Chat = () => {
         }
       ,[]);
     
-
   useEffect(()=>{
      if(chat?._id){
       socket.emit("join-chat",chat._id);
@@ -80,27 +97,6 @@ const Chat = () => {
     //  chatTitleStatus(true);
      return ()=> socket.off("receive-message");
   },[chat?._id])
-
-//  useEffect(()=>{
-//       axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
-//         {chatId:chat?._id},
-//        {
-//         headers:{
-//                 "Content-Type":"application/json",
-//                 Authorization:`Bearer ${refreshToken}`
-//             },
-//         withCredentials:true 
-//        }
-//       ).then((res)=>{
-//       settypeMessage("");
-//       setChatTitleStatus(true);
-//       setAllMessages(res.data);
-//       // console.log(res.data);
-//       }).catch((err)=>{
-//         console.log("Error:",err.message)
-//       })
-//   },[chat?._id]);
-  
 
   const handleAllUser=async(e)=>{
     setInput(e.target.value);
@@ -248,9 +244,7 @@ const handleMessageSend=async(chatId,content)=>{
   // setMessageStatus(true);
 }         
 
-
-
-  return (
+return (
     <>
     <div className='chat-section'>
     <div className='chat-navbar w-screen flex justify-between items-center'>
