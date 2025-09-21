@@ -183,7 +183,7 @@ const handleClick=async(user) =>{
         withCredentials:true 
       }
      )
-    console.log("updated chat has fetch")
+    // console.log("updated chat has fetch")
     console.log(existedChat.data);
     const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
       {chatId:value?._id},
@@ -196,7 +196,7 @@ const handleClick=async(user) =>{
     )
      
      setChatData(allChat.data);
-     setChat(existedChat.data[0]);
+     setChat(existedChat.data);
      setChatStatus(true);
      setAllMessages(response.data);
  }
