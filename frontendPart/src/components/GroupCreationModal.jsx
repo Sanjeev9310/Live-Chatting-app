@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { backendUrl } from '../constantApi.js';
 
 const GroupCreationModal = ({modalStatus}) => {
-  const val=useRef(null);
+  // const val=useRef(null);
     const [groupData,setGroupData]=useState({
         chatName:"",
         usersId:[]

@@ -58,13 +58,7 @@ io.on("connection",(socket)=>{
        });
 
     var message=await newMsg.populate("sender","username profilePic")
-    // message=await User.populate(message,
-    //      {
-    //         path:"chat.users",
-    //         select:"username profilePic"
-    //     });
-    
-        await Chat.findByIdAndUpdate(data.chat,
+    await Chat.findByIdAndUpdate(data.chat,
             {
                 $set:{
                     newlyMessage:data.messageContent,

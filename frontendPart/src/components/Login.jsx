@@ -33,10 +33,6 @@ const Login = () => {
             withCredentials:true   
          }
        )
-         console.log(response.data);
-        
-         // console.log(response.data);
-         // console.log(response.data.data);
          if(response.data.statusCode===200 || response.data.statusCode===201){
          localStorage.setItem("userinfo",JSON.stringify(response.data.data));
          navigate("/chat");

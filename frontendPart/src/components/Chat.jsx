@@ -18,7 +18,7 @@ const Chat = () => {
 
   const [chat,setChat]=useState({});
   const [chatStatus,setChatStatus]=useState(false);
-  const [messageStatus,setMessageStatus]=useState(false);
+  // const [messageStatus,setMessageStatus]=useState(false);
   const [typeMessage,settypeMessage]=useState("");
   const [chatTitleStatus,setChatTitleStatus]=useState(false);
 
@@ -179,7 +179,7 @@ const handleClick=async(user) =>{
        }
       )
       // if(Object.keys(chat).length===0){
-      await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
+      const updatedChat=await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
       {chatId:value?._id},
       {
        headers:{
@@ -188,6 +188,7 @@ const handleClick=async(user) =>{
         withCredentials:true 
       }
      )
+    setChat(value);
     const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
       {chatId:value?._id},
       {
@@ -197,13 +198,11 @@ const handleClick=async(user) =>{
         withCredentials:true 
       }
     )
-     setChat(value);
+     
      setChatData(allChat);
      setChatStatus(true);
      setAllMessages(response.data);
-
-      
-  }
+ }
 
 const handleMessageSend=async(chatId,content)=>{
   if(!content.trim()) return;
@@ -215,7 +214,7 @@ const handleMessageSend=async(chatId,content)=>{
   settypeMessage("");
   setAllMessages(prev=>[...prev,newMsg]);
   socket.emit("send-message",newMsg);
-  setMessageStatus(true);
+  // setMessageStatus(true);
 }         
 
 
