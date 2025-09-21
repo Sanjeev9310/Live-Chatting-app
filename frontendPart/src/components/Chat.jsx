@@ -164,7 +164,7 @@ const handleClick=async(user) =>{
         console.log(singleChat);
       
       const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
-        {chatId:chat?._id},
+        {chatId:singleChat?.data?._id},
        {
         headers:{
                 "Content-Type":"application/json",
