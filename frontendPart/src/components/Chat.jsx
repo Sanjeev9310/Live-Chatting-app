@@ -4,7 +4,7 @@ import axios from "axios"
 import { Navigate, useNavigate } from 'react-router'
 import GroupCreationModal from './GroupCreationModal.jsx'
 import socket from "./socket.js";
-import { backendUrl } from '../../../backendPart/src/utils/constantApi.js'
+import { backendUrl } from '../constantApi.js'
 // import io from "socket.io-client";
 
 const Chat = () => {

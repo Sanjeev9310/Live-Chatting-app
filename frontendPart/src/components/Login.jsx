@@ -4,7 +4,7 @@ import axios from "axios"
 import {useNavigate} from "react-router-dom";
 import "./login.css"
 import { useRef } from 'react';
-import { backendUrl } from '../../../backendPart/src/utils/constantApi.js';
+import { backendUrl } from '../constantApi.js';
 
 const Login = () => {
   const navigate=useNavigate();

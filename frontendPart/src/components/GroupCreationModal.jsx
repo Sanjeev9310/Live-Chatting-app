@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import "./GroupCreation.css"
 import { useRef } from 'react';
-import { backendUrl } from '../../../backendPart/src/utils/constantApi.js';
+import { backendUrl } from '../constantApi.js';
 
 const GroupCreationModal = ({modalStatus}) => {
   const val=useRef(null);

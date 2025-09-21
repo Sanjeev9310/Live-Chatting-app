@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import axios from "axios";
 import "./register.css"
-import { backendUrl } from "../../../backendPart/src/utils/constantApi.js";
+import { backendUrl } from "../constantApi.js";
 
 const Register = () => {
   const register=useRef("");
