@@ -48,14 +48,14 @@ cloudinary.config({
       
 const userLogin=asyncHandler(async(req,res)=>{
    const {email,password}=req.body;
-   console.log(req.body);
+   // console.log(req.body);
    const existedUser=await User.findOne({email})
    // console.log(existedUser);
    if(!existedUser){
          return res.status(400).json(new ApiError(400,"Invalid credentials").toJSON());
     }
    const isPassword=await existedUser.isPasswordCorrect(password);
-   console.log(isPassword);
+   // console.log(isPassword);
    if(!isPassword){
       // console.log(new ApiError(400,"password is Invalid").toJSON());
       return res.status(400).json(new ApiError(400,"Password is Invalid").toJSON());

@@ -8,24 +8,17 @@ const accessChat=asyncHandler(async (req,res) => {
     const {userId}=req.body
     console.log(userId);
     // const registerUser=await User.findById({_id:userId});
-     var isChat=await Chat.find({
+    const isChat=await Chat.find({
         isGroupChat:false,
         $and:[
             { users:userId},
             { users:req.user._id}
         ],
     }).populate("users","-password -refreshToken")
-//     .populate("newlyMessage") 
-    
-//    isChat=await User.populate(isChat,
-//     {   
-//         path:"newlyMessage.sender",
-//         select:"username email profilePic",
-//     });
-    
+
   if(isChat.length>0){
     console.log(isChat);
-    return res.status(200).send(isChat);
+    return res.status(200).send(isChat[0]);
    } 
   else{
     const chatData={
@@ -89,14 +82,7 @@ const fetchChats=asyncHandler(async (req,res) => {
        if(results.length===0){
          return res.status(400).json(new ApiError(400,"no chat found").toJSON());
        }
-   
-        // const populatedResults=await User.populate(results,
-        //    {
-        //    path:"newlyMessage.sender",
-        //    select:"username email profilePic",
-        //    })
-            // console.log(populatedResults);
-            console.log(results);
+
             res.status(200).json(results);
     }
       
