@@ -76,7 +76,9 @@ const fetchMatchUser=asyncHandler(async (req,res) => {
 });
 
 const fetchChats=asyncHandler(async (req,res) => {
+    
      try {
+        console.log(req.user);
         const results=await Chat.find({users:req.user._id})
         .populate("users","-password -refreshToken")
         .populate("groupAdmin","-password -refreshToken")
@@ -84,7 +86,7 @@ const fetchChats=asyncHandler(async (req,res) => {
         // .populate("newlyMessage")
         
        //   console.log(results);
-       if(results===null){
+       if(results.length===0){
          return res.status(400).json(new ApiError(400,"no chat found").toJSON());
        }
    
@@ -94,10 +96,12 @@ const fetchChats=asyncHandler(async (req,res) => {
         //    select:"username email profilePic",
         //    })
             // console.log(populatedResults);
+            console.log(results);
             res.status(200).json(results);
-     } 
+    }
+      
      catch (error) {
-        console.log("Error:",error.message);
+        console.log("Error in fetching chats:",error.message);
      }
     })
 const seenMessageStatus=asyncHandler(async (req,res) => {

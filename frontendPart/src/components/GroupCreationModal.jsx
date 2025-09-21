@@ -19,10 +19,10 @@ const GroupCreationModal = ({modalStatus}) => {
     
   const handleSearchUser=async(e)=>{
     setUserInput(e.target.value);
-    if(input.length===1){
-      setGroupUserStatus(false);
-    }
-    else{
+    // if(listUser.length===1){
+    //   setGroupUserStatus(false);
+    // }
+    // else{
     const response=await axios.get(`${backendUrl}/api/v/chat/fetch-allUser`,
    {   
     params:{input},
@@ -35,7 +35,7 @@ const GroupCreationModal = ({modalStatus}) => {
     
     setsearchData(response.data.slice(0,6));
     setGroupUserStatus(true);
-  }
+  
 }
 const handleGroup=async()=>{
     const response=await axios.post(`${backendUrl}/api/v/chat/create-groupChat`,
@@ -70,7 +70,6 @@ const removeUserFromGroup=(e)=>{
    
   return (
     <div className='group-chat-model' style={{display:modalStatus?"block":"none"}}>
-      
       <form className='form flex gap-y-2'>
         <h2>Create Group</h2>
         <input onChange={(e)=>setGroupData({...groupData,chatName:e.target.value})} placeholder='Group Name' className='group-name' value={groupData.chatName}/>
@@ -89,7 +88,7 @@ const removeUserFromGroup=(e)=>{
         </div>
         <div className="users-list" style={{display:groupUserStatus?"block":"none"}}>
             <ul className='list-none m-0 p-0'>
-           {  searchdata.map((value,index)=>(
+           { searchdata && searchdata.map((value,index)=>(
               <li key={index}>
               <div className="users-div">
                  <img src={value.profilePic} className='search-dp' />
