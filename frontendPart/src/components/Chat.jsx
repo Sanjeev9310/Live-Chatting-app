@@ -25,11 +25,6 @@ const Chat = () => {
   const [allMessages,setAllMessages]=useState([]);
 
   const [seenStatus,setSeenStatus]=useState(false);
-  // const [latestMsg,setlatestMsg]=useState("");
-  // const [sendMessage,setSendMessage]=useState("");
-  
-  // const socket=io("http://localhost:5000");
-  
   const sideBarRef=useRef();
   
   // whenever user login it display data of logged in user like username and password
@@ -50,7 +45,7 @@ const Chat = () => {
       }).catch((err)=>{
         console.log("Error:error while fetching chats",err.message);
       });
-  },[chatStatus]);
+  },[]);
 
   useEffect(()=>{
      function handleClickOutside(e){
@@ -179,7 +174,7 @@ const handleClick=async(user) =>{
        }
       )
       // if(Object.keys(chat).length===0){
-      await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
+      const existedChat=await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
       {chatId:value?._id},
       {
        headers:{
@@ -188,20 +183,19 @@ const handleClick=async(user) =>{
         withCredentials:true 
       }
      )
-    
-    // const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
-    //   {chatId:value?._id},
-    //   {
-    //     headers:{
-    //             "Content-Type":"application/json"
-    //         },
-    //     withCredentials:true 
-    //   }
-    // )
+    console.log(existedChat.data);
+    const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
+      {chatId:value?._id},
+      {
+        headers:{
+                "Content-Type":"application/json"
+            },
+        withCredentials:true 
+      }
+    )
      
-    //  setChatData(allChat.data);
-    
-     setChat(value);
+     setChatData(allChat.data);
+     setChat(existedChat.data);
      setChatStatus(true);
      setAllMessages(response.data);
  }

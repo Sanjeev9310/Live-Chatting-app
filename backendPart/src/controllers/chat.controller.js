@@ -116,9 +116,11 @@ const seenMessageStatus=asyncHandler(async (req,res) => {
             new:true
         }
     )
+   console.log(chat);
    return res.send(chat);
     
 })
+
 
 const fetchSingleUser=asyncHandler(async(req,res)=>{
      const {userId}=req.body;
