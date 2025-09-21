@@ -24,6 +24,7 @@ import mongoose from "mongoose";
     },
     seenStatus:{
         type:Boolean,
+        default:false
     }
     
 
