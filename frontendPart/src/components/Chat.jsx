@@ -141,7 +141,12 @@ const Chat = () => {
   }
 
 const handleClick=async(user) =>{
+      setInput("");
       setStatus(false);
+      setChatStatus(false);
+      setChatTitleStatus(false);
+      setAllMessages([]);
+      
       setChat({});
       const singleChat=await axios.post(`${backendUrl}/api/v/chat/access-chat`,
           {
@@ -156,13 +161,11 @@ const handleClick=async(user) =>{
           }
         )
         setChat(singleChat.data[0]);
-        setChatStatus(false);
-        setChatTitleStatus(false);
-        setAllMessages([]);
+        
         console.log(singleChat.data[0]);
       
       const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
-        {chatId:value?._id},
+        {chatId:chat?._id},
        {
         headers:{
                 "Content-Type":"application/json",
@@ -185,7 +188,6 @@ const handleClick=async(user) =>{
         setChatTitleStatus(true);
         setChatStatus(true);
         
-        setInput("");
     } 
       // catch (error) {
       //     console.log("Error:",error.message);
