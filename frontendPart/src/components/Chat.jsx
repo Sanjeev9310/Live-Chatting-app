@@ -161,6 +161,7 @@ const handleClick=async(user) =>{
           }
         )
         setChat(singleChat.data[0]);
+        console.log("new chat will shown here")
         console.log(singleChat.data[0]);
       
       const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
