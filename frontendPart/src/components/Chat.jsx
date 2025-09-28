@@ -67,24 +67,24 @@ const Chat = () => {
       setChatTitleStatus(true);
 
   },[]);
-  useEffect(()=>{
-     axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
-       {chatId:chat._id},
-       {
-        headers:{
-                "Content-Type":"application/json",
-                Authorization:`Bearer ${refreshToken}`
-            },
-        withCredentials:true 
-       }
-      ).then((res)=>{
-        setAllMessages(res.data);
-      }).catch((err)=>{
-        console.log("Error: while fetching messages",err.message);
-      })
-      setChatStatus(true);
-      setChatTitleStatus(true);
-  },[chatData]);
+  // useEffect(()=>{
+  //    axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
+  //      {chatId:chat._id},
+  //      {
+  //       headers:{
+  //               "Content-Type":"application/json",
+  //               Authorization:`Bearer ${refreshToken}`
+  //           },
+  //       withCredentials:true 
+  //      }
+  //     ).then((res)=>{
+  //       setAllMessages(res.data);
+  //     }).catch((err)=>{
+  //       console.log("Error: while fetching messages",err.message);
+  //     })
+  //     setChatStatus(true);
+  //     setChatTitleStatus(true);
+  // },[chatData]);
 
   useEffect(()=>{
      function handleClickOutside(e){
