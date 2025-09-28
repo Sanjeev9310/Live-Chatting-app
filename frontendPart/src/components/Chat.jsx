@@ -44,7 +44,6 @@ const Chat = () => {
         withCredentials:true
         }
       ).then((res)=> {
-        console.log(res.data);
         setChatData(res.data);
       }).catch((err)=>{
         console.log("Error:error while fetching chats",err.message);
@@ -67,7 +66,7 @@ const Chat = () => {
       setChatStatus(true);
       setChatTitleStatus(true);
 
-  },[]);
+  },[chatData]);
 
   useEffect(()=>{
      function handleClickOutside(e){
