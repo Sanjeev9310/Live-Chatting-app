@@ -19,16 +19,19 @@ const Chat = () => {
 
   const [chat,setChat]=useState({});
   const [chatStatus,setChatStatus]=useState(false);
+  // const [currentChat,setCurrentChat]=useState("");
  
   const [typeMessage,settypeMessage]=useState("");
   const [chatTitleStatus,setChatTitleStatus]=useState(false);
+
+  const [profileStatus,setProfileStatus]=useState(false);
 
   const [allMessages,setAllMessages]=useState([]);
 
   const [seenStatus,setSeenStatus]=useState(false);
   const sideBarRef=useRef();
   
-  // whenever user login it display data of logged in user like username and password
+  // whenever user login it display data of logged in user like username and password along with the chat details that present at first index
   useEffect(()=>{
        const userData=JSON.parse(localStorage.getItem("userinfo"));
        setData(userData);
@@ -45,12 +48,12 @@ const Chat = () => {
         }
       ).then((res)=> {
         setChatData(res.data);
-      }).catch((err)=>{
-        console.log("Error:error while fetching chats",err.message);
-      });
-      setChat(chatData[0]);
-      axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
-       {chatId:chatData[0]?._id},
+        if(res.data.length>0){
+          let currentChat=res.data[0];
+           setChat(currentChat);
+      
+       axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
+       {chatId:currentChat._id},
        {
         headers:{
                 "Content-Type":"application/json",
@@ -60,32 +63,19 @@ const Chat = () => {
        }
       ).then((res)=>{
         setAllMessages(res.data);
+        // setChatStatus(true);
+        // setChatTitleStatus(true);
       }).catch((err)=>{
         console.log("Error: while fetching messages",err.message);
       })
-      setChatStatus(true);
-      setChatTitleStatus(true);
+        }
+      }).catch((err)=>{
+        console.log("Error:error while fetching chats",err.message);
+      });
 
+     
   },[]);
-  // useEffect(()=>{
-  //    axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
-  //      {chatId:chat._id},
-  //      {
-  //       headers:{
-  //               "Content-Type":"application/json",
-  //               Authorization:`Bearer ${refreshToken}`
-  //           },
-  //       withCredentials:true 
-  //      }
-  //     ).then((res)=>{
-  //       setAllMessages(res.data);
-  //     }).catch((err)=>{
-  //       console.log("Error: while fetching messages",err.message);
-  //     })
-  //     setChatStatus(true);
-  //     setChatTitleStatus(true);
-  // },[chatData]);
-
+ 
   useEffect(()=>{
      function handleClickOutside(e){
           if(sideBarRef.current && !sideBarRef.current.contains(e.target)){
@@ -202,7 +192,7 @@ const handleClick=async(user) =>{
         setChatStatus(true);
     } 
  
-    const handleClickForExistedChat=async (value) =>{
+const handleClickForExistedChat=async (value) =>{
       // setChat({});
       setChatTitleStatus(false);
       setChatStatus(false);
@@ -247,7 +237,6 @@ const handleClick=async(user) =>{
      setChatData(allChat.data);
      
  }
-
 const handleMessageSend=async(chatId,content)=>{
   if(!content.trim()) return;
   const newMsg={
@@ -264,23 +253,30 @@ const handleMessageSend=async(chatId,content)=>{
 return (
     <>
     <div className='chat-section'>
-    <div className='chat-navbar w-screen flex justify-between items-center'>
-         <div className="search-field flex">
-                 <input onChange={handleAllUser} className="input" placeholder='Search for user' value={input}/>
-                 <img className="search-icon" src="search.png"/>
-                 <div className='app-name'>Sampark Banaye</div>
+       <div className='chat-navbar flex justify-between items-center'>
+        <div className='search-bar-section flex gap-1'>
+          <input onChange={handleAllUser} className="input" placeholder='Search for user' value={input}/>
+        <div className="search-field">
+            <img className="search-icon" src="search.png"/>
+            <span className='app-name'>Sampark Banaye</span>
+        </div>
         </div>
         
-        <div className='login-user-detail p-2 flex gap-3 justify-end'>
-          <img className="dp" src={data && data[0]?.profilePic}/>
-          <div className='username text-lg'>
-            {data && data[0]?.username}
+        <div className='login-user-detail'>
+          <div className='username flex gap-2'>
+            <img className="dp" src={data && data[0]?.profilePic}/>
+            <span className='text-[15px] font-bold'>{data && data[0]?.username}</span>
           </div>
           <button onClick={handleLogout} className='logout-btn'>Logout</button>
         </div>
-    </div>
-
-         <div className="popup-box" ref={sideBarRef} style={{display:status?"block":"none"}}> 
+       </div>
+      
+      
+      
+      
+      
+      
+       <div className="popup-box" ref={sideBarRef} style={{display:status?"block":"none"}}> 
            <ul className='list-none m-0 p-0'>
            {  searchdata.map((user,index)=>(
               <li key={index}>
@@ -293,14 +289,14 @@ return (
            }
               
            </ul>
-         </div>
+       </div>
 
 
     <div className='chat-body-section'>
           <div className='chat-body flex flex-col'>
             <div className='chat-heading flex justify-between p-2'>
               <h5>Chats</h5>
-              <div className='create-group' onClick={()=>setModalStatus(true)}>
+              <div className='create-group' onClick={()=>!modalStatus?setModalStatus(true):setModalStatus(false)}>
                   <p>Group Chat</p>   
                   <img className="plus-icon" src="plus.png"/>
               </div>
@@ -308,10 +304,10 @@ return (
 
             <div className='chat-page'>
                <ul className='list-none m-0 p-0'>
-           {chatData && chatData.map((value,index)=>{
+           {chatData && chatData.map((value)=>{
               const otherUser=!value.isGroupChat?value.users.find((u)=>u._id!==data[0]._id):null;
             return (
-              <li key={index}>
+              <li key={value._id}>
               <div onClick={()=>handleClickForExistedChat(value)} className="chat-detail">
               <img src={value.isGroupChat?value.groupAdmin.profilePic:otherUser.profilePic} className='search-dp' />
               <div className='current-msg'>
@@ -325,43 +321,81 @@ return (
           }
           </ul>
           </div>
-          </div>   
-
-        <div className="message-page" style={{display:chatStatus?"block":"none"}}>
+          </div>
+          {/* <div className="message-page" style={{display:chatStatus?"block":"none"}}> */}
+          <div className="message-page">
            <div className='chat-page-window'>
             {
              chat && chat.users && ( 
               // const otherUser=!value.isGroupChat?value.users.find((u)=>u._id!==data[0]._id).username:null;
-             <div className="message-person">
-             <img className='chat-dp' src={chat.isGroupChat?chat.groupAdmin.profilePic:chat.users[1]?.profilePic}/>
+             <div className="message-person" onClick={()=>setProfileStatus(true)}>
+             <img className='chat-dp' src={chat.isGroupChat?chat.groupAdmin.profilePic:chat.users[1].profilePic}/>
              <p>{chat.isGroupChat?chat.chatName:chat.users.find((u)=>u._id!==data[0]._id).username}</p>
              </div>
              )
             }
           
-               <div className='message-window' style={{display:chatTitleStatus?"block":"none"}}>
-              {/* <div className='messages'> */}
+               {/* <div className='message-window' style={{display:chatTitleStatus?"block":"none"}}> */}
+                <div className='message-window'>
                 <ul className='list-of-message list-none flex flex-col gap-y-1 m-0 p-0' >
                 {
                   allMessages && allMessages.map((v,i)=>(
-                    <div className={`msg-tab ${v.sender?._id==data[0]._id?"sent":"received"}`}  key={i}>{v.messageContent}</div>
+                    <div key={i} className={`msg-div flex ${v.sender?._id==data[0]._id?"sent-div":"received-div"}`}>
+                    <img className="user-photo" src={v.sender?.profilePic}/>
+                    <div className={`msg-tab ${v.sender?._id==data[0]._id?"sent":"received"}`}  key={i}>
+                      {v.messageContent}</div>
+                    </div>
                   ))
                 }
                 </ul>
-              {/* </div> */}
               </div>
               
-              <div className='message-enter-section flex flex-row' style={{display:chat?.length!==0?"block":"none"}}>
+              <div className='message-enter-section flex flex-row' style={{display:chatData?.length!==0?"block":"none"}}>
                   <input type="text" onChange={(e)=>settypeMessage(e.target.value)} className='msg-typing-area' placeholder='Type your message here' value={typeMessage}/>
                   <img onClick={()=>handleMessageSend(chat._id,typeMessage)} className="send-icon" src="send-message.png"/>
               </div>
                 
-           </div>
-        </div>
+          </div>
+          </div> 
+    </div>     
+
+
+           
+    <div className='view-profile-section' style={{display:profileStatus?"block":"none"}}>
+          <div className='flex justify-start gap-3'>
+             <img src="arrow.png" className="arrow-left" onClick={()=>setProfileStatus(false)}/>
+            <p className=''>Profile Details</p>
           </div>
            
-    
-    <GroupCreationModal modalStatus={modalStatus}/>
+            <div className='profile-photo'>
+              {chat && chat.users && (
+                <>
+                <img src={chat?.isGroupChat?chat.groupAdmin.profilePic:chat.users[1].profilePic} className='profile-dp'/>
+                <p className='profile-name'>{chat.isGroupChat?chat.chatName:chat.users[1].username}</p>
+                </>
+              )}
+            </div>
+            <div>
+              {
+                chat && chat.isGroupChat && chat.users && (
+                  <>
+                 <ul className="chat-users-list">
+                  {
+                    chat.users.filter((u)=>u._id!==data[0]._id).map((value,key)=>(
+                      <div className='chat-user-list' key={key}>
+                       <img src={value.profilePic} className='users-dp'/>
+                       <li key={key}>{value.username}</li>
+                       </div>
+                    ))
+                  }
+                   
+                 </ul>
+                 </>
+                )
+              }
+            </div>
+           </div>
+    <GroupCreationModal modalStatus={modalStatus} chatData={chatData} setChatData={setChatData}/>
   </div>
      </>
   )

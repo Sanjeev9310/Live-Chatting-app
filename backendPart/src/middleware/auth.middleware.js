@@ -18,5 +18,4 @@ const refreshToken=req.cookies?.refreshToken ||  req.headers?.Authorization?.spl
     next();
 }
 )
-
 export {isUserLogin}

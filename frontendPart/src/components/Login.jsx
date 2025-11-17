@@ -9,6 +9,7 @@ import { backendUrl } from '../constantApi.js';
 const Login = () => {
   const navigate=useNavigate();
   const login=useRef("");
+  const [isSubmitting,setIsSubmitting]=useState(false);
   // const [status,setStatus]=useState(false);
   const [loginData,setLoginData]=useState({
      email:"",
@@ -22,8 +23,7 @@ const Login = () => {
 
   const handleSubmit=async(e)=>{
     e.preventDefault();
-    
-    // try {
+    setIsSubmitting(true);
      try {
        const response=await axios.post(`${backendUrl}/api/v/user/login`,
         loginData,
@@ -67,7 +67,7 @@ const Login = () => {
             <input  onChange={handleChange} value={loginData.password} type="password" id="password" placeholder='password' className='field'/>
            </div>
            <p ref={login} style={{color:"red"}}></p>
-           <button type="submit" className="submit-btn">Submit</button>
+           <button type="submit" className="submit-btn" disabled={isSubmitting}>Submit</button>
           </div>  
        </form> 
            <div className="bottom-text">

@@ -18,12 +18,15 @@ cloudinary.config({
          if([username,email,password].some((field)=>field?.trim()==="")){
             return res.status(400).json(new ApiError(401,"All field are required").toJSON());
          }
-         if(!pic){
-           return res.status(400).json(new ApiError(401,"Image is not selected").toJSON());
-         }
-         const image=await cloudinary.uploader.upload(pic?.path,{
+         // if(!pic){
+         //   return res.status(400).json(new ApiError(401,"Image is not selected").toJSON());
+         // }
+         let image;
+         if(pic){
+            image=await cloudinary.uploader.upload(pic.path,{
             folder:"chatApp Profile picture"
          })
+        }
 
          const existedUser=await User.findOne(
             {
@@ -32,16 +35,16 @@ cloudinary.config({
           )
           
          if(existedUser){
-            console.log(existedUser);
+            // console.log(existedUser);
             return res.status(400).json(new ApiError(400,"This User is already exist").toJSON());
          }
          const user=await User.create({
             username,
             email,
             password,
-            profilePic:image.secure_url
+            profilePic:image?.secure_url || NULL
          })
-         console.log(user);
+         // console.log(user);
           return res.status(201).json(new ApiResponse(201,user,"User register Successfully"));
       })     
 
@@ -64,11 +67,8 @@ const userLogin=asyncHandler(async(req,res)=>{
    const refreshToken=await existedUser.generateRefreshToken();
    existedUser.refreshToken=refreshToken;
    await existedUser.save({validateBeforeSave:false});
-   // existedUser.accessToken=accessToken;
-   // await existedUser.save({validateBeforeSave:false});
-   
+
    const user=await User.find(existedUser._id).select("-password");
-   // console.log(user);
    const options={
       httpOnly:true,
       secure:true,

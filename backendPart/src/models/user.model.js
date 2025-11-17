@@ -3,21 +3,14 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 const userSchema=new mongoose.Schema({
      username:{
-        type:String,
-        required:true,
-        unique:true,
-        lowercase:true,
-        trim:true,
+        type:String,required:true,unique:true,lowercase:true,trim:true,
         index:true
       },
      email:{
-        type:String,
-        required:true,
-        unique:true
+        type:String,required:true,unique:true
      },
      password:{
-        type:String,
-        required:true,
+        type:String,required:true,
      },
      profilePic:{
       type:String,
@@ -30,7 +23,8 @@ const userSchema=new mongoose.Schema({
 
 userSchema.pre("save",async function (next){
 if(!this.isModified("password")) return next();
- this.password=await bcrypt.hash(this.password,10) // 10 is no. of round that algorithm takes  to hash the password
+// 10 is no. of round that algorithm takes  to hash the password
+ this.password=await bcrypt.hash(this.password,10)
  return next(); })
 
 userSchema.methods.isPasswordCorrect=async function(password){

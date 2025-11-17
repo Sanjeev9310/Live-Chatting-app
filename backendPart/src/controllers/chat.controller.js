@@ -63,7 +63,7 @@ const fetchMatchUser=asyncHandler(async (req,res) => {
     }:{};
        const response=await User.find(keyword)
     //    .find({ _id: {$ne:req.user._id}});
-    //    console.log(response);
+       console.log(response);
        return res.status(201).send(response);
    
 });
@@ -116,7 +116,11 @@ const fetchSingleUser=asyncHandler(async(req,res)=>{
 
 const createGroupChat=asyncHandler(async (req,res) => {
     const {chatName,usersId}=req.body
-    console.log(req.body);
+    console.log(chatName);
+    if(chatName==""){
+    return res.status(401).json(new ApiError("400","Please provide group name"));
+    }
+    // console.log(req.body);
     // const users=JSON.parse(usersId)
     // console.log(users);
     if(usersId.length>1){
@@ -124,7 +128,7 @@ const createGroupChat=asyncHandler(async (req,res) => {
      }
      
     else{
-     throw new ApiError("400","Select atleast 2 member to make a group chat")
+     return res.status(401).json(new ApiError("400","Select atleast 2 member to make a group chat")).toJSON();
     }
     const groupChat=await Chat.create({
         chatName:chatName,
@@ -140,7 +144,7 @@ const createGroupChat=asyncHandler(async (req,res) => {
     //     path:"newlyMessage.sender",
     //     select:"username email profilePic",
     // })
-      console.log(populatedChat);
+    //   console.log(populatedChat);
       return res.status(200).send(populatedChat);
     })
     // .populate("newlyMessage")

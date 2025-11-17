@@ -62,7 +62,7 @@ const Register = () => {
    
   return (
     <div className="register flex flex-col justify-center items-center">
-      <h2 className="title text-blue">Online Chatting App</h2>
+      <h2 className="title">Live Chatting App</h2>
       <div className="form-sectionR">
         <div className="formR">
           <p className="form-headingR">Please fill the form to register</p>

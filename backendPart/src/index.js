@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+
 import express, { urlencoded } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -15,7 +15,7 @@ import { Chat } from "./models/chat.model.js";
 dotenv.config({path:"./.env"})
 const app=express();
 app.use(cors({
-    origin:"https://live-chatting-app-1.onrender.com",
+    origin:"http://localhost:5173",
     methods:["GET","POST","PUT"],
     credentials: true
 }));
@@ -28,11 +28,13 @@ app.use(express.urlencoded({ extended: true }
 const server=createServer(app);
 const io=new Server(server,{
    cors:{
-      origin:"https://live-chatting-app-1.onrender.com",
+      origin:"http://localhost:5173",
       methods:["GET","POST","PUT"],
       credentials:true
    }
 });
+
+import mongoose from "mongoose";
 const dbConnection=async()=>{
     try{
         const connectionInstance=await mongoose.connect(`${process.env.MONGODB_URL}/chatapp`);
@@ -56,7 +58,6 @@ io.on("connection",(socket)=>{
             messageContent:data.messageContent,
             chat:data.chat
        });
-
     var message=await newMsg.populate("sender","username profilePic")
     await Chat.findByIdAndUpdate(data.chat,
             {
@@ -69,15 +70,12 @@ io.on("connection",(socket)=>{
                 new:true,
             }
         )
-
         console.log("message received",message);
         socket.to(data.chat).emit("receive-message",message);
     })
-
     socket.on("disconnect",()=>{
         console.log("user disconnected",socket.id);
     })
-
     socket.on("join-chat",(chatId)=>{
         socket.join(chatId);
     })
