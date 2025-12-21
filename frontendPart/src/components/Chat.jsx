@@ -271,12 +271,8 @@ return (
         </div>
        </div>
       
-      
-      
-      
-      
-      
-       <div className="popup-box" ref={sideBarRef} style={{display:status?"block":"none"}}> 
+        {/* Search user that you want to start chat with them  */}
+      <div className="popup-box" ref={sideBarRef} style={{display:status?"block":"none"}}> 
            <ul className='list-none m-0 p-0'>
            {  searchdata.map((user,index)=>(
               <li key={index}>
@@ -350,9 +346,11 @@ return (
                 </ul>
               </div>
               
-              <div className='message-enter-section flex flex-row' style={{display:chatData?.length!==0?"block":"none"}}>
-                  <input type="text" onChange={(e)=>settypeMessage(e.target.value)} className='msg-typing-area' placeholder='Type your message here' value={typeMessage}/>
+              <div className='message-enter-section' style={{display:chatData?.length!==0?"block":"none"}}>
+                <div className='msg-typing-area'>
+                  <input type="text" className="w-full" onChange={(e)=>settypeMessage(e.target.value)} placeholder='Type your message here' value={typeMessage}/>
                   <img onClick={()=>handleMessageSend(chat._id,typeMessage)} className="send-icon" src="send-message.png"/>
+                </div>
               </div>
                 
           </div>

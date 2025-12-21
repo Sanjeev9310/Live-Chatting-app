@@ -49,8 +49,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    /* position: absolute; */
-    padding:1rem;
+    padding:5px 5px 5px;
     position: relative;
     background-color:#dfe7ed ;
  }
@@ -80,6 +79,7 @@
  .chat-page{
     /* padding:0.8rem; */
     width:auto;
+    height:100%;
     overflow-y: scroll;
  }
  .chat-page::-webkit-scrollbar{
@@ -121,18 +121,19 @@
 .chat-body-section{
     display: flex;
     flex-direction: row;
-    /* width:100%;
-    height:100vh; */
+    /* width:100%; */
+    /* height:100vh; */
+    column-gap: 5px;
+    padding: 5px;
     flex:1;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 .chat-body{
     width:25%;
     height:100%;
-    overflow: auto;
     min-width:180px;
-    max-height:525px;
-    margin:0.5rem ;
+    /* max-height:555px; */
+    /* margin:0.5rem ; */
     border:solid black 2px;
     border-radius:5px;
     background-color: rgb(209, 222, 233);
@@ -179,7 +180,7 @@
    display: flex;
    flex-direction: column;
    row-gap: 1rem;
-   padding-left: 1rem;
+   /* padding-left: 2rem; */
    /* align-items: center; */
 }
 .users-dp{
@@ -192,10 +193,11 @@
     display: flex;
     flex-direction: column;
     flex:1;
+    height:100%;
+    /* margin-bottom: 5rem; */
     overflow: auto;
-    position:relative;
     padding:5px;
-    margin-top:0.5rem;
+    /* margin-top:0.5rem; */
     border: solid 3px rgb(57, 130, 255);
     border-radius:5px;
     background-color: rgb(207, 222, 227);
@@ -207,6 +209,7 @@
    .message-page{
       /* display: block; */
       width:100vw !important;
+      /* height:100vh !important; */
       /* flex:1; */
    }
    
@@ -252,17 +255,17 @@
 .message-enter-section{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    position: relative;
     bottom: 0;
     left:0;
-    width:100%;
-    padding: 10px;
-    column-gap:0.3rem;
-    border-top:1px solid #ccc;
+    padding:5px;
 }
 .msg-typing-area{
-    width:90%;
-    height:min-content;
+    /* position: absolute; */
+    display: flex;
+    align-items: center;
+    column-gap:0.2rem;
+    /* height:min-content; */
 }
 .chat-dp{
     width: 2rem;
