@@ -88,9 +88,7 @@ const Home = () => {
       }).catch((err)=>{
         console.log("Error:error while fetching chats",err.message);
       });
-
-     
-  },[location?.pathname]);
+ },[chatData]);
  
   useEffect(()=>{
      function handleClickOutside(e){
