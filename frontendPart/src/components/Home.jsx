@@ -234,7 +234,7 @@ return (
       
       </div>
       {/* Right sectin part of Application */}
-      <div className={`flex flex-col flex-1 my-2 h-[88vh]  ${selectedChat?"block":"hidden"} md:block`}>
+      <div className={`flex flex-col flex-1 my-2 h-[75vh]  ${selectedChat?"block":"hidden"} md:block`}>
         {
           selectedChat && (
              <MessageModal allMessages={allMessages} setAllMessages={setAllMessages} profileStatus={profileStatus} setProfileStatus={setProfileStatus} chat={chat} chatData={chatData} typeMessage={typeMessage} settypeMessage={settypeMessage} data={data} setSelectedChat={setSelectedChat} selectedChat={selectedChat} onBack={()=>setSelectedChat(null)}/>
