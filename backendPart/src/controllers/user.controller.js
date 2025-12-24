@@ -74,7 +74,7 @@ const userLogin=asyncHandler(async(req,res)=>{
       secure:true,
       sameSite:"none"
    }
-   console.log(user);   
+   // console.log(user);   
    return res.status(201).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options).json(new ApiResponse(201,user,"User login successfully"));
 }) 
 

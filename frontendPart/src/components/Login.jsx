@@ -23,34 +23,35 @@ const Login = () => {
 
   const handleSubmit=async(e)=>{
     e.preventDefault();
-    setIsSubmitting(true);
-     try {
-       const response=await axios.post(`${backendUrl}/api/v/user/login`,
-        loginData,
-        {    header:{
-                 "Content-Type":"application/json"
-             },
-            withCredentials:true   
-         }
-       )
-       console.log(response.data.data);
-        //  if(response.data.statusCode===200 || response.data.statusCode===201){
-         localStorage.setItem("userinfo",JSON.stringify(response.data.data));
-        //  localStorage.setItem("accessToken",JSON.stringify(response.data.accessToken));
-         localStorage.setItem("refreshToken",response.data.refreshToken);
-         navigate("/chat");
-        //  }
-      }
-      catch (error) {
-         if(error.response && error.response.data) {
-            login.current.innerText=error.response.data.message;
-         }
-         else{
-           login.current.innerText="unexpected error"
-         }
+     login.current.innerText="";
+     setIsSubmitting(true);
+       try {
+        const response=await axios.post(`${backendUrl}/api/v/user/login`,
+         loginData,
+         {    header:{
+                  "Content-Type":"application/json"
+              },
+             withCredentials:true   
+          }
+        )
+        console.log(response.data.data);
+          if(response.data.statusCode===200 || response.data.statusCode===201){
+          localStorage.setItem("userinfo",JSON.stringify(response.data.data));
+         //  localStorage.setItem("accessToken",JSON.stringify(response.data.accessToken));
+          localStorage.setItem("refreshToken",response.data.refreshToken);
+          setIsSubmitting(false)
+          navigate("/home");
+         //  }
+        }
+       else {
+             login.current.innerText=response?.data?.message
+          }
      }
-    }
-
+       catch (error) {
+          login.current.innerText=error.response?.data?.message || "unexpected error";
+          setIsSubmitting(false)
+       }
+      }
   return(
     <>
     <div className='login-section'>

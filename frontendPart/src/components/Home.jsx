@@ -1,14 +1,16 @@
 import React, { createContext, useEffect, useRef, useState } from 'react'
 import "./chat.css"
 import axios from "axios"
-import { Navigate, useNavigate } from 'react-router'
+import { Link, Navigate, useLocation, useNavigate } from 'react-router'
 import GroupCreationModal from './GroupCreationModal.jsx'
 import socket from "./socket.js";
 import { backendUrl } from '../constantApi.js'
+import ChatPage from './ChatPage.jsx'
 // import io from "socket.io-client";
 
-const Chat = () => {
+const Home = () => {
   const navigate=useNavigate();
+  const location=useLocation();
   const [refreshToken,setAccessToken]=useState();
   const [modalStatus,setModalStatus]=useState(false);
   const [data,setData]=useState([]);
@@ -16,6 +18,7 @@ const Chat = () => {
   const [searchdata,setsearchData]=useState([]);
   const [input,setInput]=useState("");
   const [status,setStatus]=useState(false);
+  const [messageStatus,setMessageStatus]=useState(true);
 
   const [chat,setChat]=useState({});
   const [chatStatus,setChatStatus]=useState(false);
@@ -192,51 +195,7 @@ const handleClick=async(user) =>{
         setChatStatus(true);
     } 
  
-const handleClickForExistedChat=async (value) =>{
-      // setChat({});
-      setChatTitleStatus(false);
-      setChatStatus(false);
-      setAllMessages([]);
-       const existedChat=await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
-      {chatId:value?._id},
-      {
-       headers:{
-                "Content-Type":"application/json",
-                Authorization:`Bearer ${refreshToken}`
-            },
-        withCredentials:true 
-      }
-     )
-    console.log(existedChat.data);
-    setChat(existedChat.data);
-    
-    const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
-        {chatId:value?._id},
-       {
-        headers:{
-                "Content-Type":"application/json",
-                Authorization:`Bearer ${refreshToken}`
-            },
-        withCredentials:true 
-       }
-      )
-      // if(Object.keys(chat).length===0){
-    
-    setChatStatus(true);
-    setChatTitleStatus(true);
-    setAllMessages(response.data);
-    const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
-      {
-        headers:{
-              Authorization:`Bearer ${refreshToken}`
-            },
-        withCredentials:true,
-       
-      }
-    )
-     setChatData(allChat.data);
-     
- }
+
 const handleMessageSend=async(chatId,content)=>{
   if(!content.trim()) return;
   const newMsg={
@@ -289,50 +248,25 @@ return (
 
 
     <div className='chat-body-section'>
-          <div className='chat-body flex flex-col'>
-            <div className='chat-heading flex justify-between p-2'>
-              <h5>Chats</h5>
-              <div className='create-group' onClick={()=>!modalStatus?setModalStatus(true):setModalStatus(false)}>
-                  <p>Group Chat</p>   
-                  <img className="plus-icon" src="plus.png"/>
-              </div>
-            </div>
-
-            <div className='chat-page'>
-               <ul className='list-none m-0 p-0'>
-           {chatData && chatData.map((value)=>{
-              const otherUser=!value.isGroupChat?value.users.find((u)=>u._id!==data[0]._id):null;
-            return (
-              <li key={value._id}>
-              <div onClick={()=>handleClickForExistedChat(value)} className="chat-detail">
-              <img src={value.isGroupChat?value.groupAdmin.profilePic:otherUser.profilePic} className='search-dp' />
-              <div className='current-msg'>
-                  <p>{value.isGroupChat?value.chatName:otherUser.username}</p>
-                  <p style={{fontWeight:value.seenStatus===false?700:300}}>{value && value.newlyMessage}</p>
-              </div>
-              </div>
-              </li>
-            )
-           })
-          }
-          </ul>
-          </div>
-          </div>
+          <ChatPage chatData={chatData} modalStatus={modalStatus} setModalStatus={setModalStatus} data={data} setMessageStatus={setMessageStatus} setChatTitleStatus={setChatTitleStatus}setChatStatus={setChatStatus} setAllMessages={setAllMessages}setChatData={setChatData}/>
           {/* <div className="message-page" style={{display:chatStatus?"block":"none"}}> */}
-          <div className="message-page">
+          <div className="message-page" style={{display:messageStatus?"block":"none"}}>
            <div className='chat-page-window'>
             {
              chat && chat.users && ( 
               // const otherUser=!value.isGroupChat?value.users.find((u)=>u._id!==data[0]._id).username:null;
-             <div className="message-person" onClick={()=>setProfileStatus(true)}>
+             <div>
+            <img className="arrow-left" src="arrow.png" onClick={()=>setMessageStatus(false)} />
+            <div className="message-person" onClick={()=>setProfileStatus(true)}>
              <img className='chat-dp' src={chat.isGroupChat?chat.groupAdmin.profilePic:chat.users[1].profilePic}/>
              <p>{chat.isGroupChat?chat.chatName:chat.users.find((u)=>u._id!==data[0]._id).username}</p>
+             </div>
              </div>
              )
             }
           
                {/* <div className='message-window' style={{display:chatTitleStatus?"block":"none"}}> */}
-                <div className='message-window'>
+                <div className='message-window' >
                 <ul className='list-of-message list-none flex flex-col gap-y-1 m-0 p-0' >
                 {
                   allMessages && allMessages.map((v,i)=>(
@@ -399,4 +333,4 @@ return (
   )
 }
 
-export default Chat
+export default Home
