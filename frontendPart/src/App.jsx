@@ -5,20 +5,24 @@ import Register from './components/Register.jsx'
 import ChatPage from './components/ChatPage.jsx'
 import Home from './components/Home.jsx'
 import { useEffect } from 'react'
+import MessageModal from './components/MessageModal.jsx'
+import CreateContext from './components/CreateContext.jsx'
+import GroupCreationModal from './components/GroupCreationModal.jsx'
+import Navbar from './components/Navbar.jsx'
 
 function App() {
   const navigate=useNavigate();
   const location=useLocation();
   useEffect(()=>{
     console.log(location)
-  })
+  },[location.pathname])
   return(
     <>
+     {/* <Home/> */}
      <Routes>
         <Route path="/" element={<Register/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/home" element={<Home/>}/>
-        <Route path="/chat" element={<ChatPage/>}/>
      </Routes>
     </>
   )

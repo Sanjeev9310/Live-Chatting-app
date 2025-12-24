@@ -1,8 +1,11 @@
 import React from 'react'
 import "./chat.css"
 import { backendUrl } from '../constantApi'
+import axios from 'axios'
+import { useNavigate } from 'react-router'
 
-const ChatPage = ({chatData,modalStatus,setModalStatus,data,setMessageStatus,setChatTitleStatus,setChatStatus,setAllMessages,setChatData}) => {
+const ChatPage = ({chatData,modalStatus,setModalStatus,data,setMessageStatus,setChatTitleStatus,setChatStatus,setAllMessages,refreshToken,chat,setChat,selectedChat}) => {
+  const navigate=useNavigate();
     const handleClickForExistedChat=async (value) =>{
       // setChat({});
       setMessageStatus(true)
@@ -32,26 +35,14 @@ const ChatPage = ({chatData,modalStatus,setModalStatus,data,setMessageStatus,set
         withCredentials:true 
        }
       )
-      // if(Object.keys(chat).length===0){
-    
+
     setChatStatus(true);
     setChatTitleStatus(true);
-    setAllMessages(response.data);
-    const allChat=await axios.get(`${backendUrl}/api/v/chat/fetch-chatData`,
-      {
-        headers:{
-              Authorization:`Bearer ${refreshToken}`
-            },
-        withCredentials:true,
-       
-      }
-    )
-     setChatData(allChat.data);
-     
+    setAllMessages(response.data);    
  }
   return (
-       <div className='chat-body flex flex-col'>
-            <div className='chat-heading flex justify-between p-2'>
+       <div className='w-[98vw] h-[85vh] border-blue-500 border-3 rounded overflow-y-auto mx-1 bg-[rgb(196,230,249)]'>
+            <div className='flex justify-between p-2  bg-[rgb(209,222,233)] '>
               <h5>Chats</h5>
               <div className='create-group' onClick={()=>!modalStatus?setModalStatus(true):setModalStatus(false)}>
                   <p>Group Chat</p>   
@@ -59,15 +50,19 @@ const ChatPage = ({chatData,modalStatus,setModalStatus,data,setMessageStatus,set
               </div>
             </div>
 
-            <div className='chat-page'>
+            <div>
                <ul className='list-none m-0 p-0'>
-           {chatData && chatData.map((value)=>{
+           { chatData && chatData.map((value)=>{
               const otherUser=!value.isGroupChat?value.users.find((u)=>u._id!==data[0]._id):null;
             return (
               <li key={value._id}>
-              <div onClick={handleClickForExistedChat(value)} className="chat-detail">
+              <div className="pl-[10px] flex gap-[0.7rem] hover:bg-[rgb(111,239,130)]" onClick={()=>{
+                handleClickForExistedChat(value)
+                selectedChat(value)
+              }}
+               >
               <img src={value.isGroupChat?value.groupAdmin.profilePic:otherUser.profilePic} className='search-dp' />
-              <div className='current-msg'>
+              <div className='flex flex-col w-max h-min '>
                   <p>{value.isGroupChat?value.chatName:otherUser.username}</p>
                   <p style={{fontWeight:value.seenStatus===false?700:300}}>{value && value.newlyMessage}</p>
               </div>

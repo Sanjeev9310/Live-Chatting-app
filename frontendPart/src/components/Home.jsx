@@ -6,6 +6,8 @@ import GroupCreationModal from './GroupCreationModal.jsx'
 import socket from "./socket.js";
 import { backendUrl } from '../constantApi.js'
 import ChatPage from './ChatPage.jsx'
+import MessageModal from './MessageModal.jsx'
+import Navbar from './Navbar.jsx'
 // import io from "socket.io-client";
 
 const Home = () => {
@@ -15,14 +17,15 @@ const Home = () => {
   const [modalStatus,setModalStatus]=useState(false);
   const [data,setData]=useState([]);
   const [chatData,setChatData]=useState([]);
-  const [searchdata,setsearchData]=useState([]);
+  const [searchdata,setSearchData]=useState([]);
   const [input,setInput]=useState("");
   const [status,setStatus]=useState(false);
-  const [messageStatus,setMessageStatus]=useState(true);
+  const [messageStatus,setMessageStatus]=useState(null);
 
   const [chat,setChat]=useState({});
   const [chatStatus,setChatStatus]=useState(false);
   // const [currentChat,setCurrentChat]=useState("");
+  const [selectedChat,setSelectedChat]=useState(null);
  
   const [typeMessage,settypeMessage]=useState("");
   const [chatTitleStatus,setChatTitleStatus]=useState(false);
@@ -35,6 +38,16 @@ const Home = () => {
   const sideBarRef=useRef();
   
   // whenever user login it display data of logged in user like username and password along with the chat details that present at first index
+  //   useEffect(()=>{
+  //   function setVH(){
+  //     const vh=window.innerHeight * 0.01;
+  //     document.documentElement.style.setProperty("--vh",`${vh}px`);
+  //   }
+  //   setVH();
+  //   window.addEventListener("resize",setVH);
+  //   return ()=> window.removeEventListener("resize",setVH);
+  // },[]);
+
   useEffect(()=>{
        const userData=JSON.parse(localStorage.getItem("userinfo"));
        setData(userData);
@@ -77,7 +90,7 @@ const Home = () => {
       });
 
      
-  },[]);
+  },[location?.pathname]);
  
   useEffect(()=>{
      function handleClickOutside(e){
@@ -108,43 +121,7 @@ const Home = () => {
      return ()=> socket.off("receive-message");
   },[chat?._id])
 
-  const handleAllUser=async(e)=>{
-    setInput(e.target.value);
-    if(input.length===1){
-      setStatus(false);
-    }
-    else{
-    const response=await axios.get(`${backendUrl}/api/v/chat/fetch-allUser`,
-    {   
-    params:{input},
-    headers:{
-                "Content-Type":"application/json",
-                Authorization:`Bearer ${refreshToken}`
-            },
-    withCredentials:true   
-    }
-    );
-    console.log(response.data);
-    setsearchData(response.data);
-    setStatus(true);
-  }
-}
- const handleLogout=async()=>{
-     localStorage.clear();
-     await axios.post(`${backendUrl}/api/v/user/logout`,
-      {},
-        {
-           headers:{
-              "Content-Type":"application/json",
-              Authorization:`Bearer ${refreshToken}`
-            },
-          withCredentials:true
-        }
-     )
-     console.log("user being logout");
-     navigate("/login");
-    //  window.alert("User logged out");
-  }
+
 
 const handleClick=async(user) =>{
       setInput("");
@@ -193,107 +170,12 @@ const handleClick=async(user) =>{
         setAllMessages(response.data || []);
         setChatTitleStatus(true);
         setChatStatus(true);
-    } 
- 
-
-const handleMessageSend=async(chatId,content)=>{
-  if(!content.trim()) return;
-  const newMsg={
-    sender:{_id:data[0]._id},
-    messageContent:content,
-    chat:chatId
-  }
-  settypeMessage("");
-  setAllMessages(prev=>[...prev,newMsg]);
-  socket.emit("send-message",newMsg);
-  // setMessageStatus(true);
-}         
+    }     
 
 return (
     <>
-    <div className='chat-section'>
-       <div className='chat-navbar flex justify-between items-center'>
-        <div className='search-bar-section flex gap-1'>
-          <input onChange={handleAllUser} className="input" placeholder='Search for user' value={input}/>
-        <div className="search-field">
-            <img className="search-icon" src="search.png"/>
-            <span className='app-name'>Sampark Banaye</span>
-        </div>
-        </div>
-        
-        <div className='login-user-detail'>
-          <div className='username flex gap-2'>
-            <img className="dp" src={data && data[0]?.profilePic}/>
-            <span className='text-[15px] font-bold'>{data && data[0]?.username}</span>
-          </div>
-          <button onClick={handleLogout} className='logout-btn'>Logout</button>
-        </div>
-       </div>
-      
-        {/* Search user that you want to start chat with them  */}
-      <div className="popup-box" ref={sideBarRef} style={{display:status?"block":"none"}}> 
-           <ul className='list-none m-0 p-0'>
-           {  searchdata.map((user,index)=>(
-              <li key={index}>
-              <div onClick={()=>handleClick(user)} className="result-item user-data flex gap-2">
-              <img src={user.profilePic} className='search-dp' />
-              <p>{user.username}</p>
-              </div>
-              </li>
-             ))
-           }
-              
-           </ul>
-       </div>
-
-
-    <div className='chat-body-section'>
-          <ChatPage chatData={chatData} modalStatus={modalStatus} setModalStatus={setModalStatus} data={data} setMessageStatus={setMessageStatus} setChatTitleStatus={setChatTitleStatus}setChatStatus={setChatStatus} setAllMessages={setAllMessages}setChatData={setChatData}/>
-          {/* <div className="message-page" style={{display:chatStatus?"block":"none"}}> */}
-          <div className="message-page" style={{display:messageStatus?"block":"none"}}>
-           <div className='chat-page-window'>
-            {
-             chat && chat.users && ( 
-              // const otherUser=!value.isGroupChat?value.users.find((u)=>u._id!==data[0]._id).username:null;
-             <div>
-            <img className="arrow-left" src="arrow.png" onClick={()=>setMessageStatus(false)} />
-            <div className="message-person" onClick={()=>setProfileStatus(true)}>
-             <img className='chat-dp' src={chat.isGroupChat?chat.groupAdmin.profilePic:chat.users[1].profilePic}/>
-             <p>{chat.isGroupChat?chat.chatName:chat.users.find((u)=>u._id!==data[0]._id).username}</p>
-             </div>
-             </div>
-             )
-            }
-          
-               {/* <div className='message-window' style={{display:chatTitleStatus?"block":"none"}}> */}
-                <div className='message-window' >
-                <ul className='list-of-message list-none flex flex-col gap-y-1 m-0 p-0' >
-                {
-                  allMessages && allMessages.map((v,i)=>(
-                    <div key={i} className={`msg-div flex ${v.sender?._id==data[0]._id?"sent-div":"received-div"}`}>
-                    <img className="user-photo" src={v.sender?.profilePic}/>
-                    <div className={`msg-tab ${v.sender?._id==data[0]._id?"sent":"received"}`}  key={i}>
-                      {v.messageContent}</div>
-                    </div>
-                  ))
-                }
-                </ul>
-              </div>
-              
-              <div className='message-enter-section' style={{display:chatData?.length!==0?"block":"none"}}>
-                <div className='msg-typing-area'>
-                  <input type="text" className="w-full" onChange={(e)=>settypeMessage(e.target.value)} placeholder='Type your message here' value={typeMessage}/>
-                  <img onClick={()=>handleMessageSend(chat._id,typeMessage)} className="send-icon" src="send-message.png"/>
-                </div>
-              </div>
-                
-          </div>
-          </div> 
-    </div>     
-
-
-           
-    <div className='view-profile-section' style={{display:profileStatus?"block":"none"}}>
+    <div className='flex flex-col'>
+       <div className='view-profile-section' style={{display:profileStatus?"block":"none"}}>
           <div className='flex justify-start gap-3'>
              <img src="arrow.png" className="arrow-left" onClick={()=>setProfileStatus(false)}/>
             <p className=''>Profile Details</p>
@@ -327,8 +209,42 @@ return (
               }
             </div>
            </div>
-    <GroupCreationModal modalStatus={modalStatus} chatData={chatData} setChatData={setChatData}/>
-  </div>
+      <Navbar data={data} setSearchData={setSearchData} input={input} setInput={setInput} setStatus={setStatus} refreshToken={refreshToken}/>
+      
+        {/* Search user that you want to start chat with them  */}
+      <div className="popup-box" ref={sideBarRef} style={{display:status?"block":"none"}}> 
+           <ul className='list-none m-0 p-0'>
+           {  searchdata.map((user,index)=>(
+              <li key={index}>
+              <div onClick={()=>handleClick(user)} className="result-item user-data flex gap-2">
+              <img src={user.profilePic} className='search-dp' />
+              <p>{user.username}</p>
+              </div>
+              </li>
+             ))
+           }
+              
+           </ul>
+       </div>
+
+    <div className='flex h-screen w-full overflow-hidden relative'>
+       {/* left section part of Application */}
+      <div className={`w-full mt-2 h-[70vh] ${selectedChat?"hidden md:block":"block"}`}>
+          <ChatPage chatData={chatData} modalStatus={modalStatus} setModalStatus={setModalStatus} data={data} setMessageStatus={setMessageStatus}  setChatTitleStatus={setChatTitleStatus} setChatStatus={setChatStatus} setAllMessages={setAllMessages} setChatData={setChatData} refreshToken={refreshToken} chat={chat} setChat={setChat} selectedChat={(chat)=>setSelectedChat(chat)}/>
+      
+      </div>
+      {/* Right sectin part of Application */}
+      <div className={`flex flex-col flex-1 my-2 h-[88vh]  ${selectedChat?"block":"hidden"} md:block`}>
+        {
+          selectedChat && (
+             <MessageModal allMessages={allMessages} setAllMessages={setAllMessages} profileStatus={profileStatus} setProfileStatus={setProfileStatus} chat={chat} chatData={chatData} typeMessage={typeMessage} settypeMessage={settypeMessage} data={data} setSelectedChat={setSelectedChat} selectedChat={selectedChat} onBack={()=>setSelectedChat(null)}/>
+          )
+        }
+      </div>     
+    </div> 
+    <GroupCreationModal modalStatus={modalStatus} chatData={chatData} setChatData={setChatData}/>    
+</div>
+  
      </>
   )
 }
