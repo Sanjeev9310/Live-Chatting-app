@@ -30,7 +30,7 @@ useEffect(() => {
        {
          isAuthenticated? (
            <Home/>
-           ):(<Navigate to="/login" replace />);
+           ):(navigate("/login"));
        }
        <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated}/>}/>
      </Routes>
