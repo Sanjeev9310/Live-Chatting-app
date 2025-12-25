@@ -32,7 +32,7 @@ useEffect(() => {
            <Home/>
            ):(<Navigate to="/login" replace />);
        }
-       <Route path="/login" element={<Login/>}/>
+       <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated}/>}/>
      </Routes>
     </>
   )
