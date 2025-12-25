@@ -13,6 +13,12 @@ import Navbar from './components/Navbar.jsx'
 function App() {
   const navigate=useNavigate();
   const location=useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+useEffect(() => {
+  const token = localStorage.getItem("authToken");
+  if (token) setIsAuthenticated(true);
+}, []);
   useEffect(()=>{
     console.log(location)
   },[location.pathname])
@@ -21,8 +27,12 @@ function App() {
      {/* <Home/> */}
      <Routes>
         <Route path="/" element={<Register/>}/>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/home" element={<Home/>}/>
+       {
+         isAuthenticated? (
+           <Home/>
+           ):(<Navigate to="/login" replace />);
+       }
+       <Route path="/login" element={<Login/>}/>
      </Routes>
     </>
   )
