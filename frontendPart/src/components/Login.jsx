@@ -53,7 +53,7 @@ const Login = () => {
 <<<<<<< HEAD
           navigate("/dashboard");
 =======
-          navigate("/home");
+        
 >>>>>>> f76665bbf565e5b2a4c67803e46f4ea6e948ab84
          //  }
         }
