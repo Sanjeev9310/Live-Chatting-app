@@ -1,6 +1,6 @@
 import Login from './components/Login.jsx'
 // import { createBrowserRouter, RouterProvider} from 'react-router'
-import { BrowserRouter,Routes,Route, useNavigate, useLocation } from 'react-router-dom'
+import { BrowserRouter,Routes,Route, useNavigate, useLocation,Navigate} from 'react-router-dom'
 import Register from './components/Register.jsx'
 import ChatPage from './components/ChatPage.jsx'
 import Home from './components/Home.jsx'
@@ -14,6 +14,10 @@ function App() {
   const navigate=useNavigate();
   const location=useLocation();
  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  function ProtectedRoute({ children }) {
+  const { isAuthenticated } = useContext(AuthContext);
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  }
 
 
   useEffect(()=>{
@@ -24,7 +28,11 @@ function App() {
      {/* <Home/> */}
      <Routes>
         <Route path="/" element={<Register/>}/>
-       <Route path="/home" element={<Home/>}/>
+       <Route path="/home" element={
+       <ProtectedRoute>
+         <Home/>
+       </ProtectedRoute>
+       }/>
        <Route path="/login" element={<Login/>}/>
      </Routes>
     </>
