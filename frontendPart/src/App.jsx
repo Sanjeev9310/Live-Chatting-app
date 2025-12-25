@@ -15,10 +15,7 @@ function App() {
   const location=useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-useEffect(() => {
-  const token = localStorage.getItem("accessToken");
-  if (token) setIsAuthenticated(true);
-}, []);
+
   useEffect(()=>{
     console.log(location)
   },[location.pathname])
@@ -27,11 +24,7 @@ useEffect(() => {
      {/* <Home/> */}
      <Routes>
         <Route path="/" element={<Register/>}/>
-       {
-         isAuthenticated? (
-           <Home/>
-           ):(navigate("/login"));
-       }
+       <Route path="/home" element={<Home/>}/>
        <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated}/>}/>
      </Routes>
     </>
