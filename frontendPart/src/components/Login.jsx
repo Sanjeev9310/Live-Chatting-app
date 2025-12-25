@@ -5,9 +5,10 @@ import {useNavigate} from "react-router-dom";
 import "./login.css"
 import { useRef } from 'react';
 import { backendUrl } from '../constantApi.js';
-
+import {AuthContext} from "./CreateContext.jsx";
 const Login = () => {
   const navigate=useNavigate();
+  const { setIsAuthenticated } = useContext(AuthContext);
   const login=useRef("");
   const [isSubmitting,setIsSubmitting]=useState(false);
   // const [status,setStatus]=useState(false);
@@ -40,6 +41,7 @@ const Login = () => {
          //  localStorage.setItem("accessToken",JSON.stringify(response.data.accessToken));
           localStorage.setItem("refreshToken",response.data.refreshToken);
           setIsSubmitting(false)
+          setIsAuthenticated(true);
           navigate("/home");
          //  }
         }
