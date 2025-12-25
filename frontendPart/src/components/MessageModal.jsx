@@ -25,7 +25,7 @@ const MessageModal = ({allMessages,setAllMessages,profileStatus,setProfileStatus
   }    
 
   return (
-      <div className='flex flex-col overflow-hidden md:p-[5px] border-[3px] border-[rgb(57,130,255)] rounded bg-[rgb(207,222,227)] h-[90vh] relative p-1'>
+      <div className='flex flex-col h-[70vh] overflow-hidden p-[5px] border-[3px] border-[rgb(57,130,255)] rounded bg-[rgb(207,222,227)] h-[90vh] relative p-1'>
           {/* <div className='chat-page-window'> */}
             <div className='message-person flex gap-[0.65rem]'>
                <img onClick={onBack} className="md:hidden w-[1rem] h-[1rem] mt-2 cursor-pointer" src="arrow.png"/>

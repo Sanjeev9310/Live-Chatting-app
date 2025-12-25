@@ -5,11 +5,18 @@ import {useNavigate} from "react-router-dom";
 import "./login.css"
 import { useRef } from 'react';
 import { backendUrl } from '../constantApi.js';
+<<<<<<< HEAD
 import { AuthContext } from './AuthContext.jsx';
 
 const Login = () => {
   const navigate=useNavigate();
   const {setIsAuthenticated}=useContext(AuthContext);
+=======
+import {AuthContext} from "./CreateContext.jsx";
+const Login = () => {
+  const navigate=useNavigate();
+  const { setIsAuthenticated } = useContext(AuthContext);
+>>>>>>> f76665bbf565e5b2a4c67803e46f4ea6e948ab84
   const login=useRef("");
   const [isSubmitting,setIsSubmitting]=useState(false);
   // const [status,setStatus]=useState(false);
@@ -43,7 +50,11 @@ const Login = () => {
           localStorage.setItem("refreshToken",response?.data?.data[0].refreshToken);
           setIsSubmitting(false)
           setIsAuthenticated(true);
+<<<<<<< HEAD
           navigate("/dashboard");
+=======
+          navigate("/home");
+>>>>>>> f76665bbf565e5b2a4c67803e46f4ea6e948ab84
          //  }
         }
        else {

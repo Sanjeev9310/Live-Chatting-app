@@ -49,7 +49,7 @@ const ChatPage = ({chatData,modalStatus,setModalStatus,data,setMessageStatus,set
     setAllMessages(response.data);    
  }
   return (
-       <div className='w-[98vw] h-[85vh] border-blue-500 border-3 rounded overflow-y-auto mx-1 bg-[rgb(196,230,249)]'>
+       <div className='w-[98vw] h-[75vh] border-blue-500 border-3 rounded overflow-y-auto mx-1 bg-[rgb(196,230,249)]'>
             <div className='flex justify-between p-2  bg-[rgb(209,222,233)] '>
               <h5>Chats</h5>
               <div className='create-group' onClick={()=>!modalStatus?setModalStatus(true):setModalStatus(false)}>

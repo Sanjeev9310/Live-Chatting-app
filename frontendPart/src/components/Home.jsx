@@ -68,12 +68,21 @@ const Home = () => {
           let currentChat=res.data[0];
            setChat(currentChat);
         }
+<<<<<<< HEAD
   }).catch((err)=>{
     console.error("Error while fetching list of chat" || err.message);
   })
     },[]);
   
     useEffect(()=>{
+=======
+      }).catch((err)=>{
+        console.log("Error:error while fetching chats",err.message);
+      });
+ },[chatData]);
+ 
+  useEffect(()=>{
+>>>>>>> f76665bbf565e5b2a4c67803e46f4ea6e948ab84
      function handleClickOutside(e){
           if(sideBarRef.current && !sideBarRef.current.contains(e.target)){
             setStatus(false);
@@ -222,7 +231,7 @@ return (
       
       </div>
       {/* Right sectin part of Application */}
-      <div className={`flex flex-col flex-1 my-2 h-[88vh]  ${selectedChat?"block":"hidden"} md:block`}>
+      <div className={`flex flex-col flex-1 my-2 h-[70vh]  ${selectedChat?"block":"hidden"} md:block`}>
         {
           selectedChat && (
              <MessageModal allMessages={allMessages} setAllMessages={setAllMessages} profileStatus={profileStatus} setProfileStatus={setProfileStatus} chat={chat} chatData={chatData} typeMessage={typeMessage} settypeMessage={settypeMessage} data={data} setSelectedChat={setSelectedChat} selectedChat={selectedChat} onBack={()=>{
