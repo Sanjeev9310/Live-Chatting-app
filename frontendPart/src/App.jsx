@@ -13,7 +13,7 @@ import Navbar from './components/Navbar.jsx'
 function App() {
   const navigate=useNavigate();
   const location=useLocation();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+ // const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 
   useEffect(()=>{
@@ -25,7 +25,7 @@ function App() {
      <Routes>
         <Route path="/" element={<Register/>}/>
        <Route path="/home" element={<Home/>}/>
-       <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated}/>}/>
+       <Route path="/login" element={<Login/>}/>
      </Routes>
     </>
   )
