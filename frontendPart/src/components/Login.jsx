@@ -6,7 +6,7 @@ import "./login.css"
 import { useRef } from 'react';
 import { backendUrl } from '../constantApi.js';
 
-const Login = () => {
+const Login = ({setIsAuthenticated}) => {
   const navigate=useNavigate();
   const login=useRef("");
   const [isSubmitting,setIsSubmitting]=useState(false);
@@ -39,6 +39,7 @@ const Login = () => {
           localStorage.setItem("userinfo",JSON.stringify(response.data.data));
          //  localStorage.setItem("accessToken",JSON.stringify(response.data.accessToken));
           localStorage.setItem("refreshToken",response.data.refreshToken);
+          setIsAuthenticated(true);
           setIsSubmitting(false)
           navigate("/home");
          //  }
