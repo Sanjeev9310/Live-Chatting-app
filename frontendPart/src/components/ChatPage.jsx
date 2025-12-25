@@ -1,18 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import "./chat.css"
 import { backendUrl } from '../constantApi'
 import axios from 'axios'
 import { useNavigate } from 'react-router'
 
-const ChatPage = ({chatData,modalStatus,setModalStatus,data,setMessageStatus,setChatTitleStatus,setChatStatus,setAllMessages,refreshToken,chat,setChat,selectedChat}) => {
+const ChatPage = ({chatData,modalStatus,setModalStatus,data,setMessageStatus,setChatTitleStatus,setChatStatus,setAllMessages,refreshToken,chat,setChat,selectedChat,setChatData}) => {
   const navigate=useNavigate();
+  const [isSeen,setIsSeen]=useState(true);
+
     const handleClickForExistedChat=async (value) =>{
       // setChat({});
       setMessageStatus(true)
       setChatTitleStatus(false);
       setChatStatus(false);
       setAllMessages([]);
-       const existedChat=await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
+      
+      const existedChat=await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
       {chatId:value?._id},
       {
        headers:{
@@ -24,8 +27,13 @@ const ChatPage = ({chatData,modalStatus,setModalStatus,data,setMessageStatus,set
      )
     console.log(existedChat.data);
     setChat(existedChat.data);
-    
-    const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
+    // we dont need newly message bold anymore
+    setChatData((prev)=>prev.map((chatItem)=>chatItem._id===value._id?{
+      ...chatItem,seenStatus:true
+     }:chatItem
+    ))
+  
+   const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
         {chatId:value?._id},
        {
         headers:{
@@ -64,7 +72,7 @@ const ChatPage = ({chatData,modalStatus,setModalStatus,data,setMessageStatus,set
               <img src={value.isGroupChat?value.groupAdmin.profilePic:otherUser.profilePic} className='search-dp' />
               <div className='flex flex-col w-max h-min '>
                   <p>{value.isGroupChat?value.chatName:otherUser.username}</p>
-                  <p style={{fontWeight:value.seenStatus===false?700:300}}>{value && value.newlyMessage}</p>
+                  <p style={{fontWeight:value.seenStatus?300:700}}>{value && value.newlyMessage}</p>
               </div>
               </div>
               </li>

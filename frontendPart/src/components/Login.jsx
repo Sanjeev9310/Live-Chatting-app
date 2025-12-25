@@ -1,13 +1,15 @@
 import { Link } from 'react-router'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import axios from "axios"
 import {useNavigate} from "react-router-dom";
 import "./login.css"
 import { useRef } from 'react';
 import { backendUrl } from '../constantApi.js';
+import { AuthContext } from './AuthContext.jsx';
 
 const Login = () => {
   const navigate=useNavigate();
+  const {setIsAuthenticated}=useContext(AuthContext);
   const login=useRef("");
   const [isSubmitting,setIsSubmitting]=useState(false);
   // const [status,setStatus]=useState(false);
@@ -38,9 +40,10 @@ const Login = () => {
           if(response.data.statusCode===200 || response.data.statusCode===201){
           localStorage.setItem("userinfo",JSON.stringify(response.data.data));
          //  localStorage.setItem("accessToken",JSON.stringify(response.data.accessToken));
-          localStorage.setItem("refreshToken",response.data.refreshToken);
+          localStorage.setItem("refreshToken",response?.data?.data[0].refreshToken);
           setIsSubmitting(false)
-          navigate("/home");
+          setIsAuthenticated(true);
+          navigate("/dashboard");
          //  }
         }
        else {

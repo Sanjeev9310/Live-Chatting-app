@@ -225,10 +225,6 @@
     margin-bottom:5px;
     font-weight: 500;
 }
-.message-window{
-    flex:1;
-    overflow-y:auto;
-}
 .message-window::-webkit-scrollbar{
     display: none;
 }

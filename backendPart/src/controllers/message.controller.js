@@ -45,17 +45,4 @@ const fetchAllMessages=asyncHandler(async (req,res) => {
    return res.status(200).send(data);
 })
 
-// const removeNewlyMessage=asyncHandler(async(req,res)=>{
-//     const {chatId}=req.body;
-//     await Chat.findByIdAndUpdate(chatId,
-//     {
-//         $set:{
-//             newlyMessage:undefined
-//         }
-//     },
-//     {
-//         new:true
-//     }
-// )
-// })
 export {sendnewMessage,fetchAllMessages}

@@ -10,7 +10,10 @@ import mongoose from "mongoose";
     chat:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Chat"
-    }
+    },
+    // seenStatus:{
+    //     type:Boolean
+    // }
 
 },{timestamps:true})
 

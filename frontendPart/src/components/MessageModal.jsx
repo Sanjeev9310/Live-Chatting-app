@@ -3,7 +3,7 @@ import socket from "./socket.js";
 import { useLocation, useNavigate } from 'react-router';
 import "./chat.css"
 
-const MessageModal = ({allMessages,setAllMessages,profileStatus,setProfileStatus,chat,chatData,typeMessage,settypeMessage,data,selectedChat,onBack}) => {
+const MessageModal = ({allMessages,setAllMessages,profileStatus,setProfileStatus,chat,chatData,typeMessage,settypeMessage,data,selectedChat,setChatData,onBack}) => {
   const location=useLocation();
   const navigate=useNavigate();
   const handleMessageSend=async(chatId,content)=>{
@@ -15,6 +15,11 @@ const MessageModal = ({allMessages,setAllMessages,profileStatus,setProfileStatus
     }
     settypeMessage("");
     setAllMessages(prev=>[...prev,newMsg]);
+    setChatData((prev)=>prev.map((chatItem)=>chatItem._id===chatId?{
+      ...chatItem,newlyMessage:content,seenStatus:true
+     }:chatItem
+    )
+  )
     socket.emit("send-message",newMsg);
     // setMessageStatus(true);
   }    
@@ -37,7 +42,7 @@ const MessageModal = ({allMessages,setAllMessages,profileStatus,setProfileStatus
             }
             </div>
             
-            <div className="message-window">
+            <div className="message-window overflow-auto h-[82%]">
                 <ul className='list-of-message list-none flex flex-col gap-y-1 m-0 p-0' >
                 {
                   allMessages && allMessages.map((v,i)=>(

@@ -67,32 +67,13 @@ const Home = () => {
         if(res.data.length>0){
           let currentChat=res.data[0];
            setChat(currentChat);
-      
-       axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
-       {chatId:currentChat._id},
-       {
-        headers:{
-                "Content-Type":"application/json",
-                Authorization:`Bearer ${refreshToken}`
-            },
-        withCredentials:true 
-       }
-      ).then((res)=>{
-        setAllMessages(res.data);
-        // setChatStatus(true);
-        // setChatTitleStatus(true);
-      }).catch((err)=>{
-        console.log("Error: while fetching messages",err.message);
-      })
         }
-      }).catch((err)=>{
-        console.log("Error:error while fetching chats",err.message);
-      });
-
-     
-  },[location?.pathname]);
- 
-  useEffect(()=>{
+  }).catch((err)=>{
+    console.error("Error while fetching list of chat" || err.message);
+  })
+    },[]);
+  
+    useEffect(()=>{
      function handleClickOutside(e){
           if(sideBarRef.current && !sideBarRef.current.contains(e.target)){
             setStatus(false);
@@ -115,11 +96,16 @@ const Home = () => {
   useEffect(()=>{
       socket.on("receive-message",(data)=>{
       setAllMessages((prev)=>[...prev,data]);
-     });
-     
-    //  chatTitleStatus(true);
-     return ()=> socket.off("receive-message");
-  },[chat?._id])
+      console.log(allMessages);
+      setChatData((prev)=>prev.map((chatItem)=>{
+        if(chatItem._id!==data.chatId) return chatItem;
+        const isOpen=chat && chat._id===data.chatId;
+        return {...chatItem,newlyMessage:data.messageContent,seenStatus:isOpen?true:false}
+      }
+     ));
+    })
+    return ()=> socket.off("receive-message");
+  },[socket,setAllMessages])
 
 
 
@@ -129,6 +115,8 @@ const handleClick=async(user) =>{
       setStatus(false);
       setChatStatus(false);
       setChatTitleStatus(false);
+
+
       
       const singleChat=await axios.post(`${backendUrl}/api/v/chat/access-chat`,
           {
@@ -237,7 +225,10 @@ return (
       <div className={`flex flex-col flex-1 my-2 h-[88vh]  ${selectedChat?"block":"hidden"} md:block`}>
         {
           selectedChat && (
-             <MessageModal allMessages={allMessages} setAllMessages={setAllMessages} profileStatus={profileStatus} setProfileStatus={setProfileStatus} chat={chat} chatData={chatData} typeMessage={typeMessage} settypeMessage={settypeMessage} data={data} setSelectedChat={setSelectedChat} selectedChat={selectedChat} onBack={()=>setSelectedChat(null)}/>
+             <MessageModal allMessages={allMessages} setAllMessages={setAllMessages} profileStatus={profileStatus} setProfileStatus={setProfileStatus} chat={chat} chatData={chatData} typeMessage={typeMessage} settypeMessage={settypeMessage} data={data} setSelectedChat={setSelectedChat} selectedChat={selectedChat} onBack={()=>{
+              setSelectedChat(null)
+              setChat({})
+             }} setChatData={setChatData}/>
           )
         }
       </div>     

@@ -90,6 +90,7 @@ const fetchChats=asyncHandler(async (req,res) => {
         console.log("Error in fetching chats:",error.message);
      }
     })
+
 const seenMessageStatus=asyncHandler(async (req,res) => {
     const {chatId}=req.body;
     const chat=await Chat.findByIdAndUpdate(chatId,

@@ -20,6 +20,7 @@ app.use(cors({
     credentials: true
 }));
 // "https://live-chatting-app-1.onrender.com"
+// http://localhost:5173
 
 app.use(express.json());
 app.use(cookieParser());
@@ -50,13 +51,13 @@ app.use("/api/v/chat",chatRouter);
 app.use("/api/v/message",messageRouter);
 
 io.on("connection",(socket)=>{
-    console.log("user connected",socket.id);
+    // console.log("user connected",socket.id);
 
     socket.on("send-message",async(data)=>{
         const newMsg=await Message.create({
             sender:data.sender,
             messageContent:data.messageContent,
-            chat:data.chat
+            chatId:data.chat
        });
     var message=await newMsg.populate("sender","username profilePic")
     await Chat.findByIdAndUpdate(data.chat,
