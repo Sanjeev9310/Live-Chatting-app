@@ -52,33 +52,30 @@ app.use("/api/v/message",messageRouter);
 
 io.on("connection",(socket)=>{
     // console.log("user connected",socket.id);
-
+    socket.on("join-chat",(chatId)=>{
+        socket.join(chatId);
+    })
+    socket.on("seen",async(chatId)=>{
+         socket.emit("message-seen",{chatId})
+    })
     socket.on("send-message",async(data)=>{
         const newMsg=await Message.create({
-            sender:data.sender,
+            sender:data.sender._id,
             messageContent:data.messageContent,
-            chatId:data.chat
-       });
-    var message=await newMsg.populate("sender","username profilePic")
-    await Chat.findByIdAndUpdate(data.chat,
-            {
-                $set:{
-                    newlyMessage:data.messageContent,
-                    seenStatus:false
-                  }
-            },
-            {
-                new:true,
+            chat:data.chat
+        })
+        var message=await newMsg.populate("sender","username profilePic")
+        await Chat.findByIdAndUpdate(data.chat,{
+            $set:{
+               newlyMessage:data.messageContent,
+               seenStatus:true
             }
-        )
-        console.log("message received",message);
-        socket.to(data.chat).emit("receive-message",message);
+        })
+        console.log("message received");
+        socket.to(data.chat).emit("receive-message",{...message.toObject(),tempId:data._id});
     })
     socket.on("disconnect",()=>{
         console.log("user disconnected",socket.id);
-    })
-    socket.on("join-chat",(chatId)=>{
-        socket.join(chatId);
     })
 });
 

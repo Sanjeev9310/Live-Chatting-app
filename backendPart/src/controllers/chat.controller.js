@@ -6,7 +6,7 @@ import { ApiError } from "../utils/apiError.js";
 // import { ApiResponse } from "../utils/apiResponse.js";
 const accessChat=asyncHandler(async (req,res) => {
     const {userId}=req.body
-    console.log(userId);
+    // console.log(userId);
     // const registerUser=await User.findById({_id:userId});
     const isChat=await Chat.find({
         isGroupChat:false,
@@ -17,7 +17,7 @@ const accessChat=asyncHandler(async (req,res) => {
     }).populate("users","-password -refreshToken")
 
   if(isChat.length>0){
-    console.log(isChat);
+    // console.log(isChat);
     return res.status(200).send(isChat[0]);
    } 
   else{
@@ -31,13 +31,12 @@ const accessChat=asyncHandler(async (req,res) => {
         // console.log(createdchatData);
         const fullchatData=await Chat.findById({_id:createdchatData._id}).populate("users","-password -refreshToken")
         // .populate("newlyMessage")
-        console.log(fullchatData);       
+        // console.log(fullchatData);       
         return res.status(200).send(fullchatData);    
     } 
     catch (error) {
         res.status(500)
         .json(new ApiError(500,"chat not accessible"))
-        
     }
 }
 })
@@ -63,7 +62,7 @@ const fetchMatchUser=asyncHandler(async (req,res) => {
     }:{};
        const response=await User.find(keyword)
     //    .find({ _id: {$ne:req.user._id}});
-       console.log(response);
+    //    console.log(response);
        return res.status(201).send(response);
    
 });
@@ -105,7 +104,6 @@ const seenMessageStatus=asyncHandler(async (req,res) => {
     ).populate("users","username profilePic")
    console.log(chat);
    return res.send(chat);
-    
 })
 
 
@@ -117,17 +115,13 @@ const fetchSingleUser=asyncHandler(async(req,res)=>{
 
 const createGroupChat=asyncHandler(async (req,res) => {
     const {chatName,usersId}=req.body
-    console.log(chatName);
     if(chatName==""){
     return res.status(401).json(new ApiError("400","Please provide group name"));
     }
-    // console.log(req.body);
-    // const users=JSON.parse(usersId)
-    // console.log(users);
+
     if(usersId.length>1){
         usersId.push(req.user._id);
      }
-     
     else{
      return res.status(401).json(new ApiError("400","Select atleast 2 member to make a group chat")).toJSON();
     }
@@ -148,10 +142,6 @@ const createGroupChat=asyncHandler(async (req,res) => {
     //   console.log(populatedChat);
       return res.status(200).send(populatedChat);
     })
-    // .populate("newlyMessage")
-    
-  
-
 
 const renameGroupName=asyncHandler(async(req,res) => {
     const newName=req.body.name;
@@ -171,7 +161,6 @@ const renameGroupName=asyncHandler(async(req,res) => {
 })
 
 const removeUserFromGroup=asyncHandler(async(req,res)=>{
-    // const newName=req.body.name;
     const {groupId,userId}=req.body;
     
     const removeGroupChat=await Chat.updateOne({_id:groupId},
@@ -189,6 +178,7 @@ const removeUserFromGroup=asyncHandler(async(req,res)=>{
       }  
       return res.status(200).send(removeGroupChat);
 })
+
 const addInGroup=asyncHandler(async(req,res)=>{
      const {groupId,userId}=req.body;
     

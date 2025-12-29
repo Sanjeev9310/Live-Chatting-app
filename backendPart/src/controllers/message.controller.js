@@ -6,7 +6,6 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 
 const sendnewMessage=asyncHandler(async(req,res)=>{
     const {messageContent,chatId}=req.body;
-    console.log(messageContent,chatId);
     if(!req.body){
         return res.status(401).json(new ApiError(400,"please send the required details").toJSON());
     }
@@ -28,13 +27,8 @@ const sendnewMessage=asyncHandler(async(req,res)=>{
         newlyMessage:messageContent
       }
     )
-    // console.log(message);
-    // console.log(newMessage);
-
-    // const populatedMessage=await Message.findById(newMessage._id)
     return res.status(200).send(message);
 })
-
 
 const fetchAllMessages=asyncHandler(async (req,res) => {
     const {chatId}=req.body;

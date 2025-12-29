@@ -10,7 +10,7 @@ cloudinary.config({
         api_secret: process.env.API_SECRET
     });
 
-  const userRegister=asyncHandler(async (req,res) => {
+const userRegister=asyncHandler(async (req,res) => {
          const {username,email,password}=req.body;
          // console.log(req.body);
          const pic=req.file;
@@ -18,24 +18,18 @@ cloudinary.config({
          if([username,email,password].some((field)=>field?.trim()==="")){
             return res.status(400).json(new ApiError(401,"All field are required").toJSON());
          }
-         // if(!pic){
-         //   return res.status(400).json(new ApiError(401,"Image is not selected").toJSON());
-         // }
          let image;
          if(pic){
             image=await cloudinary.uploader.upload(pic.path,{
             folder:"chatApp Profile picture"
          })
         }
-
          const existedUser=await User.findOne(
             {
                 $or:[{username},{email}]
             }
           )
-          
          if(existedUser){
-            // console.log(existedUser);
             return res.status(400).json(new ApiError(400,"This User is already exist").toJSON());
          }
          const user=await User.create({
@@ -44,23 +38,17 @@ cloudinary.config({
             password,
             profilePic:image?.secure_url || NULL
          })
-         // console.log(user);
           return res.status(201).json(new ApiResponse(201,user,"User register Successfully"));
       })     
 
-      
 const userLogin=asyncHandler(async(req,res)=>{
    const {email,password}=req.body;
-   // console.log(req.body);
    const existedUser=await User.findOne({email})
-   // console.log(existedUser);
    if(!existedUser){
          return res.status(400).json(new ApiError(400,"Invalid credentials").toJSON());
     }
    const isPassword=await existedUser.isPasswordCorrect(password);
-   // console.log(isPassword);
    if(!isPassword){
-      // console.log(new ApiError(400,"password is Invalid").toJSON());
       return res.status(400).json(new ApiError(400,"Password is Invalid").toJSON());
    }
    const accessToken=await existedUser.generateAccessToken();
@@ -78,12 +66,7 @@ const userLogin=asyncHandler(async(req,res)=>{
    return res.status(201).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options).json(new ApiResponse(201,user,"User login successfully"));
 }) 
 
-
-
-
-
 const userLogout=asyncHandler(async (req,res)=>{
-   // console.log(req.user._id);
    await User.findByIdAndUpdate(req.user._id,
       {
          $set:{
@@ -94,7 +77,6 @@ const userLogout=asyncHandler(async (req,res)=>{
          new:true
       }
    )
-   // console.log(user);
    const options={
       httpOnly:true,
       secure:true,
