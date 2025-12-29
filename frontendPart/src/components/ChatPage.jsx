@@ -1,39 +1,33 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./chat.css"
 import { backendUrl } from '../constantApi'
 import axios from 'axios'
 import { useNavigate } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import { openChat } from '../redux/userSlice'
+import socket from './socket.js'
 
-const ChatPage = ({chatData,modalStatus,setModalStatus,data,setMessageStatus,setChatTitleStatus,setChatStatus,setAllMessages,refreshToken,chat,setChat,selectedChat,setChatData}) => {
+const ChatPage = ({chatData,modalStatus,setModalStatus,setMessageStatus,unreadChats,setUnreadChats,setChatTitleStatus,setChatStatus,allMessages,setAllMessages,refreshToken,selectedChat,setChatData,setShowChatStatus}) => {
   const navigate=useNavigate();
-  const [isSeen,setIsSeen]=useState(true);
+  // const [isSeen,setIsSeen]=useState(true);
+  const dispatch=useDispatch();
+  const userData=useSelector((state)=>state.userDetails.data);
+  const currentChat=useSelector((state)=>state.userDetails.currentChat);
+  // useEffect(()=>{
+    
+  // },[currentChat])
 
     const handleClickForExistedChat=async (value) =>{
-      // setChat({});
-      setMessageStatus(true)
-      setChatTitleStatus(false);
-      setChatStatus(false);
-      setAllMessages([]);
-      
-      const existedChat=await axios.put(`${backendUrl}/api/v/chat/seen-message-status`,
-      {chatId:value?._id},
-      {
-       headers:{
-                "Content-Type":"application/json",
-                Authorization:`Bearer ${refreshToken}`
-            },
-        withCredentials:true 
-      }
-     )
-    console.log(existedChat.data);
-    setChat(existedChat.data);
-    // we dont need newly message bold anymore
-    setChatData((prev)=>prev.map((chatItem)=>chatItem._id===value._id?{
-      ...chatItem,seenStatus:true
-     }:chatItem
-    ))
-  
-   const response=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
+      // {isMobile && setShowChats(false)}
+      setShowChatStatus(false)
+      dispatch(openChat(value))
+      socket.emit("join-chat",value._id);
+      socket.emit("seen",value._id);    
+      setChatTitleStatus(true);
+      setChatStatus(true);
+      setMessageStatus(true);
+    
+      const msg=await axios.post(`${backendUrl}/api/v/message/fetch-all-message`,
         {chatId:value?._id},
        {
         headers:{
@@ -43,13 +37,12 @@ const ChatPage = ({chatData,modalStatus,setModalStatus,data,setMessageStatus,set
         withCredentials:true 
        }
       )
-
-    setChatStatus(true);
-    setChatTitleStatus(true);
-    setAllMessages(response.data);    
+      setAllMessages(msg.data);
+      // setShowChatOnMobile(true);
+      console.log(msg.data);
  }
   return (
-       <div className='w-[98vw] h-[75vh] border-blue-500 border-3 rounded overflow-y-auto mx-1 bg-[rgb(196,230,249)]'>
+       <div className='chat-page w-[100vw] h-[80vh] border-blue-500 border-3 rounded overflow-y-scroll bg-[hsl(202,82%,87%)] overflow-hidden'>
             <div className='flex justify-between p-2  bg-[rgb(209,222,233)] '>
               <h5>Chats</h5>
               <div className='create-group' onClick={()=>!modalStatus?setModalStatus(true):setModalStatus(false)}>
@@ -61,18 +54,15 @@ const ChatPage = ({chatData,modalStatus,setModalStatus,data,setMessageStatus,set
             <div>
                <ul className='list-none m-0 p-0'>
            { chatData && chatData.map((value)=>{
-              const otherUser=!value.isGroupChat?value.users.find((u)=>u._id!==data[0]._id):null;
+              const otherUser=(!value?.isGroupChat)?value?.users?.find((u)=>u._id!==userData?._id):null;
             return (
-              <li key={value._id}>
-              <div className="pl-[10px] flex gap-[0.7rem] hover:bg-[rgb(111,239,130)]" onClick={()=>{
-                handleClickForExistedChat(value)
-                selectedChat(value)
-              }}
-               >
-              <img src={value.isGroupChat?value.groupAdmin.profilePic:otherUser.profilePic} className='search-dp' />
+              <li key={value?._id}>
+              <div className="pl-[10px] flex gap-[0.7rem] hover:bg-[rgb(111,239,130)]" onClick={()=>handleClickForExistedChat(value)}>
+              <img src={(value?.isGroupChat)?value.groupAdmin.profilePic:otherUser?.profilePic} className='search-dp' />
               <div className='flex flex-col w-max h-min '>
-                  <p>{value.isGroupChat?value.chatName:otherUser.username}</p>
-                  <p style={{fontWeight:value.seenStatus?300:700}}>{value && value.newlyMessage}</p>
+                  <p className="semi-bold">{(value?.isGroupChat)?value.chatName:otherUser?.username}</p>
+                  {/* <p style={{fontWeight:value.seenStatus?300:700}}>{value && value.newlyMessage}</p> */}
+                   <p style={{fontWeight:value?.seenStatus?300:700}}>{value && value.newlyMessage}</p>
               </div>
               </div>
               </li>

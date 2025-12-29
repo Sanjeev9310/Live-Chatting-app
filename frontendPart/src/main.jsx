@@ -1,30 +1,20 @@
 import ReactDOM from 'react-dom/client';
-import App from './App'
-import "./index.css"
+import App from './App';
+import "./index.css";
+import {Provider} from "react-redux";
+import { PersistGate } from 'redux-persist/integration/react';
+import {store,persistor} from "./redux/store.js";
 import { BrowserRouter } from 'react-router';
-<<<<<<< HEAD
-import { AuthProvider } from './components/AuthContext.jsx';
-=======
-import {AuthProvider} from "../components/CreateContext.jsx";
->>>>>>> f76665bbf565e5b2a4c67803e46f4ea6e948ab84
-// import { ChakraProvider } from '@chakra-ui/react';
-
+// import { AuthProvider } from './components/AuthContext.jsx';
 ReactDOM.createRoot(document.getElementById('root')).render(
-    // <ChakraProvider>
-<<<<<<< HEAD
-      <BrowserRouter>
-          <AuthProvider>
-             <App/>
-          </AuthProvider>
-      </BrowserRouter>
-=======
+
      <BrowserRouter>
-         <AuthProvider>
-             <App/>
-         </AuthProvider>
-         
+         {/* <AuthProvider> */}
+            <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                    <App/>
+                </PersistGate>
+            </Provider>
+         {/* </AuthProvider> */}
      </BrowserRouter>
->>>>>>> f76665bbf565e5b2a4c67803e46f4ea6e948ab84
-   
-    // </ChakraProvider>
 )

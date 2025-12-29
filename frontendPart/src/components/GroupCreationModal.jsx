@@ -50,7 +50,7 @@ const handleGroup=async()=>{
             withCredentials:true   
          } 
     )
-       setChatData(...prevData,response.data[0]);
+       setChatData(prev=>[response.data[0],...prev]);
     } 
     catch (error){
       console.log(error.response.data.message);

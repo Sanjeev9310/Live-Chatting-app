@@ -1,10 +1,14 @@
 import React from 'react'
 import  { useNavigate } from 'react-router';
-import { backendUrl } from '../constantApi';
+import { backendUrl } from '../constantApi.js';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { closeChat, logout } from '../redux/userSlice.js';
 
 const Navbar = ({data,input,setSearchData,setStatus,setInput,refreshToken}) => {
     const navigate=useNavigate();
+    const userData=useSelector((state)=>state.userDetails.data)
+    const dispatch=useDispatch();
     const handleAllUser=async(e)=>{
     setInput(e.target.value);
     if(input.length===1){
@@ -39,6 +43,8 @@ const Navbar = ({data,input,setSearchData,setStatus,setInput,refreshToken}) => {
         }
      )
      console.log("user being logout");
+     dispatch(logout());
+    //  dispatch(closeChat())
      navigate("/login");
   }
   return (
@@ -53,8 +59,8 @@ const Navbar = ({data,input,setSearchData,setStatus,setInput,refreshToken}) => {
         
         <div className='login-user-detail'>
           <div className='username flex gap-2 justify-center items-center'>
-            <img className="dp" src={data && data[0]?.profilePic}/>
-            <span className='text-[20px] font-bold'>{data && data[0]?.username}</span>
+            <img className="dp" src={userData?.profilePic}/>
+            <span className='text-[20px] font-bold'>{userData?.username}</span>
           </div>
           <button onClick={handleLogout} className='logout-btn text-[17px]'>Logout</button>
         </div>

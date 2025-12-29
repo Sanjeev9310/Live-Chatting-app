@@ -5,18 +5,14 @@ import {useNavigate} from "react-router-dom";
 import "./login.css"
 import { useRef } from 'react';
 import { backendUrl } from '../constantApi.js';
-<<<<<<< HEAD
-import { AuthContext } from './AuthContext.jsx';
+// import { AuthContext } from './AuthContext.jsx';
+import { useDispatch } from 'react-redux';
+import { loginDetails } from '../redux/userSlice.js';
 
 const Login = () => {
   const navigate=useNavigate();
-  const {setIsAuthenticated}=useContext(AuthContext);
-=======
-import {AuthContext} from "./CreateContext.jsx";
-const Login = () => {
-  const navigate=useNavigate();
-  const { setIsAuthenticated } = useContext(AuthContext);
->>>>>>> f76665bbf565e5b2a4c67803e46f4ea6e948ab84
+  const dispatch=useDispatch();
+  // const {setIsAuthenticated}=useContext(AuthContext);
   const login=useRef("");
   const [isSubmitting,setIsSubmitting]=useState(false);
   // const [status,setStatus]=useState(false);
@@ -47,15 +43,11 @@ const Login = () => {
           if(response.data.statusCode===200 || response.data.statusCode===201){
           localStorage.setItem("userinfo",JSON.stringify(response.data.data));
          //  localStorage.setItem("accessToken",JSON.stringify(response.data.accessToken));
+          dispatch(loginDetails(response.data.data[0]));
           localStorage.setItem("refreshToken",response?.data?.data[0].refreshToken);
           setIsSubmitting(false)
-          setIsAuthenticated(true);
-<<<<<<< HEAD
+          // setIsAuthenticated(true);
           navigate("/dashboard");
-=======
-          navigate("/home");
->>>>>>> f76665bbf565e5b2a4c67803e46f4ea6e948ab84
-         //  }
         }
        else {
              login.current.innerText=response?.data?.message
@@ -71,7 +63,7 @@ const Login = () => {
     <div className='login-section'>
      <div className='form'>
         <p className='heading'>Login your details</p>
-      <form onSubmit={handleSubmit} className="login-form">
+      <form onSubmit={(e)=>e.key==="Enter"?handleSubmit(e):handleSubmit(e)} className="login-form">
         <div className='form-section'>
            <div>
            <label htmlFor="email">Email</label>
